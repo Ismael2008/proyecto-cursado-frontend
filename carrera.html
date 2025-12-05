@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="carrera-titulo-head">Cargando Carrera...</title> 
+    <link rel="stylesheet" href="Estilos/estilos.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo-link">
+                <img src="Multimedia/logo_IES 6.png" alt="Logo IES-6" class="logo">
+            </a>
+        </div>
+        <nav class="header-right">
+            <ul>
+                <li><a href="index.html" class="login-btn">Inicio</a></li>
+                
+                <li class="dropdown" id="carreras-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="carreras-dropdown-button">Carreras</a>
+                    <ul class="dropdown-content" id="carreras-dropdown">
+                    </ul>
+                </li>
+                <li><a href="mi-horario.html" class="login-btn">Mi Horario</a></li>
+                <li class="dropdown" id="contacto-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="contacto-dropdown-button">Contacto</a>
+                    <ul class="dropdown-content" id="contacto-dropdown">
+                        <li><a href="https://wa.me/5493884869773" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="mailto:marlenemarilina@gmail.com"><i class="fas fa-envelope"></i> Correo Electrónico</a></li>
+                        <li><a href="tel:+5493884869773"><i class="fas fa-phone"></i> Teléfono</a></li>
+                        <li><a href="https://facebook.com/ies6" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="https://instagram.com/ies6" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </li>
+                <li><a href="acceso.html" class="login-btn">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="carrera-container">
+            <section class="carrera-main">
+                <h1 id="carrera-nombre">Cargando Nombre de Carrera...</h1>
+                <p class="subtitulo" id="carrera-subtitulo"></p>
+
+                <div class="imagen-carrera-superior">
+                    <img id="imagen-principal" src="https://placehold.co/800x200/e9ecef/27374d?text=Cargando+Imagen" alt="Imagen representativa de la carrera" />
+                </div>
+
+                </section>
+
+            <aside class="carrera-sidebar">
+                <div class="caja-info">
+                    <h3>Información General 📚</h3>
+                    <p><strong>Duración:</strong> <span id="duracion">Cargando...</span></p>
+                    <p><strong>Modalidad:</strong> <span id="modalidad">Cargando...</span></p>
+                    <p><strong>Año de Aprobación Plan de Estudio:</strong> <span id="anio-aprobacion">Cargando...</span></p>
+                    
+                    <hr>
+                    
+                    <h4>Coordinación 👤</h4>
+                    <p><strong>Coordinador:</strong> <span id="coordinador-nombre">Cargando...</span></p>
+                    <p><strong>Email:</strong> <span id="coordinador-email">No disponible</span></p>
+                    <p><strong>Teléfono:</strong> <span id="coordinador-telefono">No disponible</span></p>
+
+                </div>
+
+                <div class="caja-info descarga-plan">
+                    
+                        <button id="btn-descargar-plan" class="btn-principal" disabled>
+                            Descargar Plan de Estudio
+                        </button>
+                        <p id="download-loading" class="hidden" style="color: #007bff; margin-top: 5px; text-align: center;">
+                            Generando y descargando, por favor espere...
+                        </p>
+                </div>
+
+            </aside>
+        </div>
+
+        <section class="plan-estudio">
+            <h2 class="seccion-titulo">Plan de Estudio</h2>
+            <div id="contenedor-anios-plan">
+                <p>Cargando Plan de Estudio...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        © 2025 IES N°6 – Proyecto de Gestión de Cursada
+    </footer>
+
+    <div class="floating-chatbot-container">
+        <button id="chatbot-toggle" class="chatbot-toggle-button">
+            <i class="fas fa-comment-dots"></i> 
+        </button>
+
+        <div id="chatbot-window" class="chatbot-window hidden">
+            <div class="chatbot-header">
+                Asistente Virtual IES N°6 
+                <button id="chatbot-close-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                
+            </div>
+            <div class="chat-input-container">
+                <input type="text" 
+                       id="chat-input" 
+                       placeholder="Escribe tu consulta...">
+                <button id="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Scripts/menu.js"></script>
+    <script src="Scripts/chatbot.js"></script>
+
+    <script>
+        // ID de la carrera actual (globalmente disponible)
+        let idCarreraActual = null;
+        let duracionCarrera = 0; // Almacenará la duración para usarla en la generación del Plan
+
+        const CARRERA_IMAGENES = {
+            "Profesorado en Educación Secundaria en Informática": "Multimedia/carreras/PESI.png",
+            "Profesorado en Educación Secundaria en Ciencias de la Administración": "Multimedia/carreras/PESCA.PNG",
+            "Profesorado en Educación Secundaria en Inglés": "Multimedia/carreras/PI.PNG",
+            "Profesorado en Educación Secundaria en Matemáticas": "Multimedia/carreras/PESM.PNG",
+            "Tecnicatura Superior en Ciencia de Datos de Inteligencia Artificial": "Multimedia/carreras/TSIA.PNG",
+            "Tecnicatura Superior en Gestión de Energías Renovables": "Multimedia/carreras/TSER.PNG",
+            "Tecnicatura Superior en Gestión de Recursos Hídricos": "Multimedia/carreras/TSRH.PNG",
+        };
+
+        // Función para obtener el ID de la URL
+        function getCarreraIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        /**
+         * Genera dinámicamente los botones de los años para el Plan de Estudio.
+         * @param {number} duracion - El número de años que dura la carrera.
+         */
+        function generarSeccionPlanEstudio(duracion) {
+            const contenedorAnios = document.getElementById('contenedor-anios-plan');
+            contenedorAnios.innerHTML = ''; // Limpiar el mensaje de "Cargando..."
+            
+            // Textos descriptivos para los años
+            const textosAnios = {
+                1: "Primer Año",
+                2: "Segundo Año",
+                3: "Tercer Año",
+                4: "Cuarto Año",
+                5: "Quinto Año" // Por si acaso hay carreras de 5 años
+            };
+
+            for (let anio = 1; anio <= duracion; anio++) {
+                const nombreAnio = textosAnios[anio] || `Año ${anio}`;
+
+                const anioHTML = `
+                    <div class="anio">
+                        <button class="boton-anio" data-anio="${anio}">${nombreAnio} ▾</button>
+                        <div class="tarjetas desplegable-anio" id="materias-${anio}"> 
+                          </div>
+                    </div>
+                `;
+                contenedorAnios.innerHTML += anioHTML;
+            }
+
+            // Después de generar el HTML, re-adjuntar los event listeners a los nuevos botones
+            adjuntarEventListenersAnios();
+        }
+
+        /**
+         * Adjunta los listeners de click a todos los botones de los años.
+         */
+        function adjuntarEventListenersAnios() {
+    const botonesAnio = document.querySelectorAll('.boton-anio');
+    botonesAnio.forEach(boton => {
+        boton.addEventListener('click', async () => {
+            const anio = boton.getAttribute('data-anio');
+            const contenedorMaterias = boton.nextElementSibling;
+            
+            // 1. Alternar la clase SIEMPRE para que el desplegable se abra/cierre
+            const isActivo = contenedorMaterias.classList.toggle('activo'); 
+
+            // 2. SOLO cargar las materias si el desplegable se acaba de abrir (isActivo es true) 
+            //    Y si el contenido aún no ha sido cargado (innerHTML.trim() === '')
+            if (isActivo && contenedorMaterias.innerHTML.trim() === '') {
+                // El contenedor está activo y está vacío, ¡cargamos!
+                await cargarMaterias(anio, contenedorMaterias);
+            }
+            
+            // Si el desplegable se cierra (isActivo es false), no hacemos nada con el contenido.
+        });
+    });
+}
+
+        // ==========================================================
+        // 1. Carga del Detalle de la Carrera (ACTUALIZADA Y CORREGIDA)
+        // ==========================================================
+        async function cargarDetalleCarrera() {
+            const id = getCarreraIdFromUrl();
+            idCarreraActual = id;
+
+            if (!id) {
+                document.getElementById('carrera-nombre').textContent = "Error: ID de Carrera no especificado.";
+                document.getElementById('carrera-titulo-head').textContent = "Error";
+                console.error("No se encontró el ID de la carrera en la URL.");
+                return;
+            }
+
+            const url = `http://localhost:3000/api/carreras/${id}`;
+
+            try {
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) {
+                    throw new Error(`Error al cargar el detalle: ${respuesta.status}`);
+                }
+                const data = await respuesta.json();
+                
+                if (!data) {
+                    document.getElementById('carrera-nombre').textContent = "Carrera no encontrada.";
+                    return;
+                }
+
+                // 1. Actualizar Títulos
+                document.getElementById('carrera-titulo-head').textContent = `${data.nombre_carrera} – IES N°6`;
+                document.getElementById('carrera-nombre').textContent = data.nombre_carrera;
+                document.getElementById('carrera-subtitulo').textContent = data.resolucion || '';
+
+                // 2. Actualizar Aside / Información General (Campos de Carrera)
+                duracionCarrera = parseInt(data.duracion, 10); // Guardar la duración como número
+                const duracionTexto = duracionCarrera ? `${duracionCarrera} años` : 'No especificada';
+
+                document.getElementById('duracion').textContent = duracionTexto;
+                document.getElementById('modalidad').textContent = data.modalidad || 'Presencial';
+                document.getElementById('anio-aprobacion').textContent = data.año_aprobacion || 'No especificado';
+                
+                // 3. Datos del Coordinador
+                const coordinador = data.coordinador; 
+                
+                document.getElementById('coordinador-nombre').textContent = coordinador?.nombre_administrador || 'Pendiente';
+                document.getElementById('coordinador-email').textContent = coordinador?.email || 'No disponible';
+                document.getElementById('coordinador-telefono').textContent = coordinador?.telefono || 'No disponible';
+                
+                // 4. *** LÓGICA DE IMAGEN DINÁMICA ***
+                const nombreCarreraNormalizado = data.nombre_carrera.trim();
+                let urlImagen = CARRERA_IMAGENES[nombreCarreraNormalizado] || IMAGEN_DEFAULT;
+
+                // Si el backend proporciona una URL de imagen, úsala preferentemente (este es un campo hipotético)
+                if (data.url_imagen_principal) {
+                    urlImagen = data.url_imagen_principal;
+                }
+                
+                document.getElementById('imagen-principal').src = urlImagen;
+                document.getElementById('imagen-principal').alt = `Imagen representativa de ${data.nombre_carrera}`;
+                
+                // 5. Generar el Plan de Estudio dinámicamente
+                if (duracionCarrera > 0) {
+                    generarSeccionPlanEstudio(duracionCarrera);
+                } else {
+                     document.getElementById('contenedor-anios-plan').innerHTML = '<p>Duración de la carrera no disponible para cargar el Plan de Estudio.</p>';
+                }
+
+                // 6. *** CÓDIGO FALTANTE: HABILITAR BOTÓN DE DESCARGA Y ADJUNTAR LISTENER ***
+                const downloadButton = document.getElementById('btn-descargar-plan');
+                downloadButton.disabled = false;
+                downloadButton.addEventListener('click', descargarPlanEstudioPDF);
+
+
+            } catch (error) {
+                console.error("Error al obtener el detalle de la carrera:", error);
+                document.getElementById('carrera-nombre').textContent = "Error al conectar con el servidor.";
+            }
+        }
+
+        // ==========================================================
+        // 2. Carga de Materias por Año
+        // ==========================================================
+async function cargarMaterias(anio, contenedor) {
+    
+    if (!idCarreraActual) {
+        contenedor.innerHTML = '<p>Error: ID de carrera no disponible.</p>';
+        return;
+    }
+
+    // CORRECCIÓN FINAL:
+    // 1. Definimos el nombre del parámetro como lo espera el servidor: 'año'
+    const parametroAnio = 'año';
+    
+    // 2. Usamos encodeURIComponent() para asegurarnos de que el caracter 'ñ'
+    //    (o su codificación %C3%B1) sea manejado correctamente en la URL.
+    //    La URL resultante será: .../api/materias?id_carrera=X&%C3%B1o=Y
+    const url = `http://localhost:3000/api/materias?id_carrera=${idCarreraActual}&${encodeURIComponent(parametroAnio)}=${anio}`;
+
+    contenedor.innerHTML = '<p>Cargando materias...</p>';
+
+    try {
+        const respuesta = await fetch(url);
+        if (!respuesta.ok) {
+            // Muestra el error de red o de servidor, pero no el mensaje que confunde.
+            throw new Error(`Error en el servidor: ${respuesta.status}`); 
+        }
+        const materias = await respuesta.json();
+        
+        contenedor.innerHTML = '';
+        contenedor.setAttribute('data-loaded', 'true'); // Marcar como cargado
+
+        if (materias.length === 0) {
+            contenedor.innerHTML = '<p style="padding: 1rem; text-align: center;">No se encontraron materias para este año.</p>';
+        } else {
+            materias.forEach(materia => {
+                const materiaHTML = `
+                    <article class="tarjeta">
+                        <div class="tarjeta__titulo">${materia.nombre_materia}</div>
+                        <a class="boton-detalle" href="materia.html?id=${materia.id_materia}">Ver Detalle</a>
+                    </article>
+                `;
+                contenedor.innerHTML += materiaHTML;
+            });
+        }
+    } catch (error) {
+        console.error("Error al obtener las materias:", error);
+        // Quitamos el mensaje confuso sobre "anio" y ponemos uno genérico.
+        contenedor.innerHTML = '<p style="padding: 1rem; text-align: center; color: red;">Ocurrió un error al cargar las materias. Revise la consola para detalles del servidor.</p>';
+        contenedor.setAttribute('data-loaded', 'false');
+    }
+}
+
+// ==========================================================
+                // NUEVA FUNCIÓN: Descargar Plan de Estudio PDF
+                // ==========================================================
+                async function descargarPlanEstudioPDF() {
+                    if (!idCarreraActual) {
+                        console.error("No hay ID de carrera disponible para descargar el plan.");
+                        return;
+                    }
+
+                    const downloadButton = document.getElementById('btn-descargar-plan');
+                    const loadingMessage = document.getElementById('download-loading');
+
+                    // Deshabilita el botón y muestra el mensaje de carga
+                    downloadButton.disabled = true;
+                    loadingMessage.classList.remove('hidden');
+
+                    // Endpoint que tu servidor debe implementar
+                    const urlDescarga = `http://localhost:3000/api/carreras/${idCarreraActual}/plan-estudio-pdf`; 
+                    
+                    try {
+                        const respuesta = await fetch(urlDescarga);
+                        
+                        if (!respuesta.ok) {
+                            throw new Error(`Error del servidor: ${respuesta.status}`);
+                        }
+
+                        // Obtiene el nombre del archivo desde el encabezado (si el servidor lo proporciona)
+                        const contentDisposition = respuesta.headers.get('Content-Disposition');
+                        let filename = `Plan_Estudio_${idCarreraActual}.pdf`;
+                        if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
+                            filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+                        }
+
+                        // Procesa la respuesta como un Blob (archivo binario)
+                        const blob = await respuesta.blob();
+                        
+                        // Crea una URL temporal para el Blob
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = filename; // Nombre del archivo a descargar
+                        
+                        document.body.appendChild(a);
+                        a.click(); // Simula el click para iniciar la descarga
+                        
+                        window.URL.revokeObjectURL(url); // Limpia la URL temporal
+
+                    } catch (error) {
+                        console.error('Error durante la descarga del Plan de Estudio:', error);
+                        alert('Ocurrió un error al intentar descargar el plan de estudio. Por favor, revise que el servidor esté funcionando y que el endpoint sea correcto.');
+                    } finally {
+                        // Habilita el botón y oculta el mensaje de carga
+                        downloadButton.disabled = false;
+                        loadingMessage.classList.add('hidden');
+                    }
+                }
+
+        // ==========================================================
+        // 3. Inicialización
+        // ==========================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+             cargarDetalleCarrera();
+             // Nota: Los event listeners para los botones de año se adjuntan
+             // dentro de generarSeccionPlanEstudio una vez que se cargan los datos.
+        });
+    </script>
+</body>
+</html>

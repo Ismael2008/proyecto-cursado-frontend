@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cursado IES N°6</title>
+    <link rel="stylesheet" href="Estilos/estilos.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo-link">
+                <img src="Multimedia/logo_IES 6.png" alt="Logo IES-6" class="logo">
+            </a>
+        </div>
+        <nav class="header-right">
+            <ul>
+                <li class="dropdown" id="carreras-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="carreras-dropdown-button">Carreras</a>
+                    <ul class="dropdown-content" id="carreras-dropdown">
+                        </ul>
+                </li>
+                <li><a href="mi-horario.html" class="login-btn">Mi Horario</a></li>
+                <li class="dropdown" id="contacto-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="contacto-dropdown-button">Contacto</a>
+                    <ul class="dropdown-content" id="contacto-dropdown">
+                        <li><a href="https://wa.me/5493884869773" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="mailto:marlenemarilina@gmail.com"><i class="fas fa-envelope"></i> Correo Electrónico</a></li>
+                        <li><a href="tel:+5493884869773"><i class="fas fa-phone"></i> Teléfono</a></li>
+                        <li><a href="https://facebook.com/ies6" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="https://instagram.com/ies6" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </li>
+                <li><a href="acceso.html" class="login-btn">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    
+    <main class="main-content">
+        <div class="main-box hero-box">
+            <div class="hero-image-container">
+                <div class="hero-image-overlay">
+                    <h1 class="hero-title">Gestión de Cursado IES N°6</h1>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-box">
+            <section class="featured-section">
+                <h2 class="section-title">Materias Destacadas</h2>
+                <div class="featured-grid" id="materias-destacadas-container">
+                    <p>Cargando materias destacadas...</p>
+                </div>
+            </section>
+        </div>
+        
+        <div class="two-column-container-bottom">
+            
+            <div class="column-left-carreras main-box">
+                <section class="careers-section">
+                    <h2 class="section-title">Carreras Disponibles</h2>
+                    <ul id="carreras-list" class="careers-list">
+                        <li>Cargando carreras...</li>
+                    </ul>
+                </section>
+            </div>
+            
+            <div class="column-right-horarios main-box">
+                <section class="schedule-section">
+                    <h2 class="section-title">Horarios Recientes de las Materias Destacadas</h2>
+                    <div class="table-responsive">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Materia</th>
+                                    <th>Día</th>
+                                    <th>Hora de Inicio</th>
+                                    <th>Hora de Fin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="horarios-destacados-body">
+                                <tr><td colspan="4">Cargando horarios...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            
+        </div>
+    </main>
+    
+    <footer class="footer">
+        © 2025 IES N°6 – Proyecto de Gestión de Cursado
+    </footer>
+    
+    <div class="floating-chatbot-container">
+        <button id="chatbot-toggle" class="chatbot-toggle-button">
+            <i class="fas fa-comment-dots"></i> 
+        </button>
+
+        <div id="chatbot-window" class="chatbot-window hidden">
+            <div class="chatbot-header">
+                Asistente Virtual IES N°6 
+                <button id="chatbot-close-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                
+            </div>
+            <div class="chat-input-container">
+                <input type="text" 
+                       id="chat-input" 
+                       placeholder="Escribe tu consulta...">
+                <button id="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="Scripts/menu.js"></script>
+    <script src="Scripts/chatbot.js"></script> 
+    
+    <script>
+        // Define el orden lógico de los días de la semana
+        const ordenDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+        /**
+        * Función auxiliar para convertir una hora (HH:MM:SS) a minutos totales desde la medianoche.
+        * (MANTENER)
+        */
+        function convertirHoraAMinutos(horaStr) {
+            const partes = horaStr.split(':').map(Number);
+            const horas = partes[0];
+            const minutos = partes[1];
+            const segundos = partes.length > 2 ? partes[2] : 0;
+            return (horas * 60) + minutos + (segundos / 60);
+        }
+
+        /**
+        * Función para ordenar dos horarios. Primero por día y luego por hora.
+        * (MANTENER)
+        */
+        function compararHorarios(a, b) {
+            const diaA = ordenDias.indexOf(a.dia_semana);
+            const diaB = ordenDias.indexOf(b.dia_semana);
+            if (diaA !== diaB) {
+                return diaA - diaB;
+            }
+            return a.hora_inicio.localeCompare(b.hora_inicio);
+        }
+
+
+        /**
+        * Función para consolidar horarios consecutivos...
+        * (MANTENER)
+        */
+        function consolidarHorarios(horarios) {
+            if (!horarios || horarios.length === 0) {
+                return [];
+            }
+            
+            const horariosCopia = [...horarios];
+            horariosCopia.sort(compararHorarios);
+
+            const horariosConsolidados = [];
+            let bloqueActual = null;
+            
+            const TOLERANCIA_MINUTOS = 5; 
+
+            for (const horario of horariosCopia) {
+                if (bloqueActual === null) {
+                    bloqueActual = { ...horario }; 
+                } else {
+                    
+                    const finActualEnMinutos = convertirHoraAMinutos(bloqueActual.hora_fin);
+                    const inicioSiguienteEnMinutos = convertirHoraAMinutos(horario.hora_inicio);
+                    const diferencia = inicioSiguienteEnMinutos - finActualEnMinutos;
+                    
+                    const esConsecutivo = (
+                        horario.nombre_materia === bloqueActual.nombre_materia &&
+                        horario.dia_semana === bloqueActual.dia_semana &&
+                        diferencia >= 0 && diferencia <= TOLERANCIA_MINUTOS
+                    );
+                    
+                    if (esConsecutivo) {
+                        bloqueActual.hora_fin = horario.hora_fin;
+                    } else {
+                        horariosConsolidados.push(bloqueActual);
+                        bloqueActual = { ...horario }; 
+                    }
+                }
+            }
+
+            if (bloqueActual !== null) {
+                horariosConsolidados.push(bloqueActual);
+            }
+
+            return horariosConsolidados;
+        }
+
+        // *** LA FUNCIÓN fetchAndRenderCarreras() SE HA ELIMINADO DE AQUÍ ***
+
+
+        // --- LÓGICA PRINCIPAL (MODIFICADA) ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            
+            // 1. Cargar y renderizar Carreras (LLAMADA A LA FUNCIÓN CENTRALIZADA)
+            if (typeof loadCarrerasList === 'function') {
+                 loadCarrerasList(); // <--- Llama a la nueva función exportada de menu.js
+            }
+            
+            // 2. Lógica para Materias Destacadas y Horarios
+            try {
+                // Endpoint simulado (asumiendo que está disponible)
+                const response = await fetch('http://localhost:3000/api/destacadas');
+                
+                if (!response.ok) {
+                    throw new Error('Error al cargar las materias destacadas desde el servidor.');
+                }
+                
+                const data = await response.json();
+                const horariosTableBody = document.getElementById('horarios-destacados-body');
+                const materiasContainer = document.getElementById('materias-destacadas-container');
+                
+                horariosTableBody.innerHTML = ''; 
+                materiasContainer.innerHTML = ''; 
+                
+                const horariosPorMateria = data.horarios.reduce((acc, horario) => {
+                    const nombre = horario.nombre_materia;
+                    if (!acc[nombre]) {
+                        acc[nombre] = [];
+                    }
+                    acc[nombre].push(horario);
+                    return acc;
+                }, {});
+
+                const ordenMateriasDestacadas = [];
+
+                data.materias.forEach(materia => {
+                    const materiaCard = document.createElement('div');
+                    materiaCard.classList.add('card');
+                    // Usando una imagen genérica si no hay una real (manteniendo tu placeholder)
+                    const imagePlaceholder = `https://placehold.co/100x100/4F46E5/ffffff?text=${materia.nombre_materia.split(' ').map(w => w[0]).join('')}`; 
+                    materiaCard.innerHTML = `
+                        <img src="${imagePlaceholder}" alt="${materia.nombre_materia}">
+                        <h3><a href="materia.html?id=${materia.id_materia}">${materia.nombre_materia}</a></h3>
+                    `;
+                    materiasContainer.appendChild(materiaCard);
+                    ordenMateriasDestacadas.push(materia.nombre_materia);
+                });
+                
+                // Lógica para llenar la tabla de Horarios (con Consolidación y Rowspan)
+                let totalFilasGeneradas = 0;
+                for (const nombreMateria of ordenMateriasDestacadas) {
+                    const horariosDeEstaMateria = horariosPorMateria[nombreMateria];
+                    
+                    if (horariosDeEstaMateria && horariosDeEstaMateria.length > 0) {
+                        const horariosConsolidados = consolidarHorarios(horariosDeEstaMateria);
+                        const rowspanCount = horariosConsolidados.length;
+                        
+                        horariosConsolidados.forEach((horario, index) => {
+                            const row = document.createElement('tr');
+                            let materiaCellHTML = '';
+                            if (index === 0) {
+                                materiaCellHTML = `<td rowspan="${rowspanCount}">${horario.nombre_materia}</td>`;
+                            }
+
+                            row.innerHTML = `
+                                ${materiaCellHTML}
+                                <td>${horario.dia_semana}</td>
+                                <td>${horario.hora_inicio.substring(0, 5)}</td>
+                                <td>${horario.hora_fin.substring(0, 5)}</td>
+                            `;
+                            horariosTableBody.appendChild(row);
+                            totalFilasGeneradas++;
+                        });
+                    }
+                }
+
+                if (totalFilasGeneradas === 0) {
+                    horariosTableBody.innerHTML = '<tr><td colspan="4">No hay horarios recientes disponibles.</td></tr>';
+                }
+
+
+            } catch (error) {
+                console.error('Error:', error.message);
+                
+                document.getElementById('materias-destacadas-container').innerHTML = '<p class="error-message" style="color: red;">Error: No se pudieron cargar las materias destacadas.</p>';
+                document.getElementById('horarios-destacados-body').innerHTML = '<tr><td colspan="4" class="error-message" style="color: red;">Error de conexión al servidor de horarios.</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>

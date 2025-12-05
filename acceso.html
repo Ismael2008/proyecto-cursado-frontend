@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Panel de Administración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Fuente Inter para una apariencia moderna */
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        /* Estilo para los mensajes de error/éxito */
+        #message-box { transition: all 0.3s ease-in-out; }
+        .toggle-password {
+            cursor: pointer;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280; /* Color gris */
+        }
+    </style>
+    <script>
+        // Almacena el resultado correcto del CAPTCHA
+        let correctCaptchaAnswer = null;
+        // Configuración global (Asegúrate de que esta URL coincida con tu backend)
+        const LOGIN_URL = 'http://localhost:3000/api/auth/login';
+        const FORGOT_PASSWORD_URL = 'http://localhost:3000/api/auth/forgot-password';
+
+        // =========================================================
+        // LÓGICA DE LOGIN
+        // =========================================================
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageBox = document.getElementById('message-box');
+            const submitButton = document.getElementById('submit-button');
+            
+            // 1. Validar el CAPTCHA antes de enviar
+            if (parseInt(document.getElementById('captcha-response').value) !== correctCaptchaAnswer) {
+                showMessageBox('El resultado del CAPTCHA es incorrecto. Inténtalo de nuevo.', 'error');
+                generateCaptcha(); // Genera uno nuevo si falló
+                return;
+            }
+
+            messageBox.textContent = '';
+            messageBox.className = 'p-3 text-sm rounded-lg mb-4 hidden';
+            submitButton.disabled = true;
+            submitButton.textContent = 'Ingresando...';
+
+            try {
+                const response = await fetch(LOGIN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        identificador: username, // Usamos 'identificador' que puede ser usuario o email en el backend
+                        contraseña: password
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Éxito: Guardar el token, nombre y rol.
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminUsername', data.nombre_administrador || username);
+                    // ✅ Almacenar el rol (Rector o Coordinador) para futuras verificaciones/redirecciones
+                    localStorage.setItem('adminRol', data.rol);
+
+                    showMessageBox('¡Acceso concedido! Redirigiendo...', 'success');
+                    setTimeout(() => {
+                        // Redirigir al panel de administración de carreras (Página principal del panel)
+                        window.location.href = 'adminCarrera.html'; 
+                    }, 1000);
+
+                } else {
+                    // Fallo: Mostrar mensaje de error del servidor. Esto incluye errores de credenciales inválidas y 
+                    // la nueva restricción por estado 'suspendido' o 'inactivo' del backend.
+                    const errorMessage = data.message || 'Error al iniciar sesión. Verifica credenciales.';
+                    showMessageBox(`Error: ${errorMessage}`, 'error');
+                    generateCaptcha(); // Generar nuevo CAPTCHA después de un intento fallido
+                }
+
+            } catch (error) {
+                console.error('Error de conexión:', error);
+                showMessageBox('Error de conexión con el servidor. Asegúrate de que el backend esté activo.', 'error');
+                generateCaptcha();
+
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Ingresar';
+            }
+        }
+
+        // =========================================================
+        // LÓGICA DE VISIBILIDAD DE CONTRASEÑA
+        // =========================================================
+
+        /**
+         * Alterna el tipo de input de la contraseña entre 'password' y 'text'.
+         */
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-password-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash'); // Muestra el icono de "ojo tachado"
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye'); // Muestra el icono de "ojo"
+            }
+        }
+
+        // =========================================================
+        // LÓGICA DE RECUPERACIÓN DE CONTRASEÑA (OLVIDO)
+        // =========================================================
+
+        async function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('recovery_email').value;
+            const recoveryButton = document.getElementById('recovery-button');
+            const modalMessage = document.getElementById('recovery-message-box');
+            modalMessage.classList.add('hidden');
+
+            if (!email || !email.includes('@')) {
+                showModalMessage('recovery-message-box', 'Por favor, ingresa un correo electrónico válido.', 'error');
+                return;
+            }
+
+            recoveryButton.disabled = true;
+            recoveryButton.textContent = 'Enviando...';
+            showModalMessage('recovery-message-box', 'Procesando tu solicitud...', 'info');
+
+            try {
+                const response = await fetch(FORGOT_PASSWORD_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email }),
+                });
+
+                // Por seguridad, siempre mostramos un mensaje genérico de éxito, independientemente de la respuesta HTTP
+                // (Ya que el backend devuelve 200 en ambos casos por motivos de seguridad)
+                showModalMessage('recovery-message-box',
+                    'Si la dirección de correo electrónico es correcta y existe en nuestro sistema, recibirás un enlace de recuperación. Revisa tu bandeja de entrada.',
+                    'success');
+
+                // Opcional: Cerrar el modal después de 6 segundos
+                setTimeout(() => closeModal('recovery-modal'), 6000);
+
+            } catch (error) {
+                console.error('Error de conexión para recuperación:', error);
+                showModalMessage('recovery-message-box', 'Error de conexión con el servidor. Intenta nuevamente.', 'error');
+
+            } finally {
+                recoveryButton.disabled = false;
+                recoveryButton.textContent = 'Enviar Enlace de Recuperación';
+            }
+        }
+
+        // =========================================================
+        // LÓGICA DEL CAPTCHA MATEMÁTICO
+        // =========================================================
+
+        /**
+         * Genera una suma aleatoria simple y la muestra en la UI.
+         */
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 9) + 1; // 1-9
+            const num2 = Math.floor(Math.random() * 9) + 1; // 1-9
+            correctCaptchaAnswer = num1 + num2;
+
+            const captchaDisplay = document.getElementById('captcha-display');
+            captchaDisplay.textContent = `¿Cuánto es ${num1} + ${num2}?`;
+
+            // Limpiar el campo de respuesta y deshabilitar el botón
+            const captchaResponse = document.getElementById('captcha-response');
+            captchaResponse.value = '';
+            document.getElementById('submit-button').disabled = true;
+        }
+
+        /**
+         * Verifica la respuesta del usuario en tiempo real.
+         */
+        function handleCaptchaChange() {
+            const response = parseInt(document.getElementById('captcha-response').value);
+            const submitButton = document.getElementById('submit-button');
+
+            if (response === correctCaptchaAnswer) {
+                submitButton.disabled = false;
+                submitButton.classList.remove('disabled:bg-gray-400');
+            } else {
+                submitButton.disabled = true;
+                submitButton.classList.add('disabled:bg-gray-400');
+            }
+        }
+
+        // =========================================================
+        // UTILIDADES Y MODALES
+        // =========================================================
+        /**
+         * Muestra el mensaje en la caja de alertas del Login.
+         */
+        function showMessageBox(text, type = 'info') {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700', 'bg-blue-100', 'text-blue-700');
+
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-700', 'block');
+            } else if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'text-red-700', 'block');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-700', 'block');
+            }
+        }
+
+        /**
+         * Muestra el mensaje en la caja de alertas de un Modal.
+         */
+        function showModalMessage(id, text, type = 'info') {
+            const messageBox = document.getElementById(id);
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700', 'bg-blue-100', 'text-blue-700');
+
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-700', 'block');
+            } else if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'text-red-700', 'block');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-700', 'block');
+            }
+        }
+
+        function openModal(id) {
+             document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            // Limpia el mensaje y el campo del modal de recuperación al cerrarlo
+            if (id === 'recovery-modal') {
+                document.getElementById('recovery-message-box').classList.add('hidden');
+                document.getElementById('recovery_email').value = '';
+            }
+        }
+
+        // =========================================================
+        // INICIALIZACIÓN
+        // =========================================================
+        window.onload = () => {
+            generateCaptcha(); // Genera el primer CAPTCHA al cargar
+            // Listener para el formulario de Login
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            // Listener para el formulario de Recuperación
+            const recoveryForm = document.getElementById('recovery-form');
+            if (recoveryForm) {
+                recoveryForm.addEventListener('submit', handleForgotPassword);
+            }
+
+            // Listener para la visibilidad de la contraseña
+            const toggleIconElement = document.getElementById('toggle-password-icon');
+            if (toggleIconElement) {
+                toggleIconElement.addEventListener('click', togglePasswordVisibility);
+            }
+        };
+    </script>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md bg-white p-8 md:p-10 rounded-xl shadow-2xl border-t-4 border-blue-600">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 text-center">
+            Acceso <span class="text-blue-600">Administrador</span>
+        </h1>
+        <p class="text-center text-gray-500 mb-8">
+            Ingresa tus credenciales y resuelve la verificación.
+        </p>
+
+        <div id="message-box" class="p-3 text-sm rounded-lg mb-4 hidden" role="alert">
+        </div>
+        <form id="login-form">
+            <div class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
+                        Nombre de Administrador o Email
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        required
+                        placeholder="Tu administrador o email"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                        Contraseña
+                    </label>
+                    <div class="relative">
+                           <input
+                                type="password"
+                                id="password"
+                                required
+                                placeholder="••••••••"
+                                minlength="8"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                         <i id="toggle-password-icon" class="fas fa-eye toggle-password"></i>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">La contraseña debe tener un mínimo de 8 caracteres, debe incluir mayúscula, minúscula, número y símbolo.'</p>
+                    <div class="text-right mt-1">
+                        <a href="#" onclick="openModal('recovery-modal')" class="text-xs text-blue-600 hover:text-blue-800 hover:underline transition duration-150">
+                            ¿Olvidaste tu Contraseña?
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        Verificación de Seguridad
+                    </label>
+
+                    <div class="flex items-center space-x-3">
+                        <span id="captcha-display" class="px-4 py-2 bg-gray-100 rounded-lg font-mono text-lg text-gray-800 border border-gray-300 min-w-[120px] text-center"></span>
+                        <input
+                            type="number"
+                            id="captcha-response"
+                            required
+                            placeholder="Respuesta"
+                            oninput="handleCaptchaChange()"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    id="submit-button"
+                    disabled
+                    class="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 ease-in-out disabled:bg-gray-400 disabled:cursor-not-allowed text-lg">
+                    Ingresar
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 space-y-3 text-center">
+            <a href="index.html"
+                class="w-full block text-center py-3 px-4 text-lg font-semibold rounded-lg transition duration-200 ease-in-out bg-blue-600 text-white shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+                Volver a la Página Principal
+            </a>
+        </div>
+    </div>
+
+    <div id="recovery-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Recuperar Contraseña</h3>
+            <p class="text-sm text-gray-600 mb-4">Ingresa el correo electrónico asociado a tu cuenta para recibir un enlace de restablecimiento.</p>
+            <div id="recovery-message-box" class="p-3 text-sm rounded-lg mb-4 hidden" role="alert"></div>
+            <form id="recovery-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="recovery_email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                        <input type="email" id="recovery_email" name="recovery_email" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="flex justify-between space-x-3 mt-6">
+                    <button type="button" onclick="closeModal('recovery-modal')"
+                             class="px-4 py-2 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-800 w-1/2 transition duration-200">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="recovery-button"
+                             class="px-4 py-2 text-base font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 w-1/2 transition duration-200">
+                        Enviar Enlace de Recuperación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

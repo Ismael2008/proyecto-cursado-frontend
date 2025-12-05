@@ -1,0 +1,688 @@
+/* Estilos/admin.css */
+
+/* Variables de Color */
+:root {
+    --primary-color: #007bff; /* Azul vibrante */
+    --secondary-color: #6c757d; /* Gris secundario */
+    --success-color: #28a745; /* Verde para éxito (Usado para 'Crear') */
+    --danger-color: #dc3545; /* Rojo para peligro/eliminar */
+    --info-color-custom: #007bff; /* Color celeste personalizado para 'Editar' */
+    --background-light: #f4f6f9; /* Fondo muy claro */
+    --surface-color: #ffffff; /* Fondo de tarjetas/paneles */
+    --text-dark: #343a40; /* Texto principal oscuro */
+    --sidebar-bg: #20354b; /* Azul oscuro para sidebar */
+    --sidebar-hover: #34495e;
+    --shadow-light: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+}
+
+/* Reset Básico y Tipografía */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+    height: 100vh;
+}
+
+/* ------------------------------------------- */
+/* LAYOUT PRINCIPAL (Flexbox) */
+/* ------------------------------------------- */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+    height: 100vh; 
+    position: fixed; 
+    top: 0;
+    left: 0; 
+
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    text-align: center;
+}
+
+.sidebar-header h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    list-style: none;
+    padding: 20px 0;
+
+    overflow-y: auto;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: background-color 0.2s, border-left 0.2s;
+    color: white; 
+    text-decoration: none; 
+}
+
+.nav-item i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: var(--sidebar-hover);
+    border-left: 4px solid var(--primary-color);
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    margin-top: auto;
+}
+
+.logout-btn {
+    width: 100%;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    font-size: 1.05rem;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+/* CONTENIDO PRINCIPAL */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-left: 250px;
+    min-width: 0;
+
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.main-header h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.user-info i {
+    margin-left: 10px;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+/* CARD / SECTION */
+.card {
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: var(--shadow-light);
+}
+
+/* ------------------------------------------- */
+/* BARRA DE ACCIONES Y FILTROS */
+/* ------------------------------------------- */
+.actions-bar {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef; 
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre el Label y el Select */
+}
+
+.filter-item select {
+    flex-grow: 1; 
+    width: auto; 
+}
+
+.filter-group label {
+    font-weight: 600;
+    white-space: nowrap; 
+}
+
+/* Estilo para el select de filtro */
+#carrera-select {
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    min-width: 250px;
+}
+
+#materia-select 
+{
+    padding: 8px 10px;
+    border: 1px solid #ced4da; 
+    border-radius: 4px;
+    font-size: 0.95rem;
+    min-width: 250px;
+}
+
+#materia-principal-select 
+{
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    min-width: 250px;
+}
+
+#correlatividad-message {
+    font-size: 0.9em; 
+    padding: 15px; 
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ------------------------------------------- */
+/* TABLAS (Alineación y Estructura) */
+/* ------------------------------------------- */
+.table-container {
+/* Restaurado para usar el scroll horizontal nativo cuando sea necesario */
+    overflow-x: auto;
+    max-width: 100%;
+
+}
+
+/* Estilos de base aplicados a ambas tablas */
+#carreras-table, #materias-table, #horario-table, #correlatividad-table, #administrador-table { 
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    table-layout: auto;
+    margin: 0;
+    
+}
+
+
+#carreras-table th, #materias-table th, #horario-table th, #correlatividad-table th, #administrador-table th,
+#carreras-table td, #materias-table td, #horario-table td, #correlatividad-table td, #administrador-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    white-space: normal;
+
+}
+
+#carreras-table tbody td, #materias-table tbody td, #horario-table tbody td, #correlatividad-table tbody td, #administrador-table tbody td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+/* Encabezados: Centrados para tablas */
+#carreras-table thead th, #materias-table thead th, #horario-table thead th, #correlatividad-table thead th, #administrador-table thead th { 
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center; 
+    white-space: normal;
+    padding: 12px 10px;
+
+}
+
+#carreras-table tbody tr:hover, #materias-table tbody tr:hover, #horario-table tbody tr:hover, #correlatividad-table tbody tr:hover, #administrador-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+#materias-table {
+    min-width: 1200px; /* Ajusta este valor (ej. 1200px) si la tabla necesita scroll para mostrar todas las 9 columnas cómodamente. */
+}
+
+/* 🟢 AÑADIDO: Estilo específico para la primera columna de MATERIAS (Columna NOMBRE) */
+/* La columna NOMBRE de la tabla Materias es la primera (td:nth-child(1)) */
+#materias-table td:nth-child(1) {
+    width: 240px; /* 💡 Asigna un ancho fijo para que no se amontone. Ajusta este valor (ej. 200px o 250px) */
+    min-width: 200px; /* Asegura el ancho mínimo */
+    white-space: normal; /* Permite que el texto salte de línea si el nombre es muy largo, evitando desbordamiento */
+    text-align: left;
+}
+
+#carreras-table td:nth-child(1) {
+    width: 300px; /* 💡 Asigna un ancho fijo para que no se amontone. Ajusta este valor (ej. 200px o 250px) */
+    min-width: 200px; /* Asegura el ancho mínimo */
+    white-space: normal; /* Permite que el texto salte de línea si el nombre es muy largo, evitando desbordamiento */
+    text-align: left;
+}
+
+.col-materia-horario {
+    /* Reducimos el porcentaje y el ancho mínimo */
+    width: 35% !important; 
+    min-width: 150px; 
+    
+    /* Asegura que el texto se ajuste y envuelva */
+    white-space: normal; 
+    word-wrap: break-word; 
+}
+
+/* 2. Ancho fijo para las columnas de DÍA, HORA INICIO y HORA FIN */
+#horario-table th:nth-child(2), /* DÍA */
+#horario-table td:nth-child(2) {
+    width: 17%; 
+    text-align: center;
+}
+
+#horario-table th:nth-child(3), /* HORA INICIO */
+#horario-table td:nth-child(3),
+#horario-table th:nth-child(4), /* HORA FIN */
+#horario-table td:nth-child(4) {
+    width: 14%; 
+    text-align: center;
+}
+
+/* 3. Ancho fijo para la columna de ACCIONES */
+#horario-table th:nth-child(5), /* ACCIONES */
+#horario-table td:nth-child(5) {
+    /* El espacio restante para que quepan los dos botones */
+    width: 20%; 
+    min-width: 180px; 
+    text-align: center;
+}
+
+#administrador-table th:nth-child(1) {
+    /* Define el ancho mínimo/máximo deseado para el nombre */
+    width: 250px; /* Puedes ajustar este valor (ej: 180px, 250px) */
+    min-width: 150px;
+}
+
+/* Aplica el mismo ancho a las celdas de datos (<td>) */
+#administrador-table td:nth-child(1) {
+    width: 250px; /* Debe coincidir con el ancho del <th> */
+    min-width: 150px;
+    white-space: normal; /* Asegura que el texto largo se envuelva si el ancho es limitado */
+}
+
+/* ----------------------------------------------------
+   ESTILOS PARA LOS BADGES DE ESTADO (Tabla de Administradores)
+   ---------------------------------------------------- */
+
+/* Estilo base para el badge */
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: #fff; /* Color de texto blanco por defecto */
+}
+
+/* Color para el estado 'ACTIVO' (badge-success) */
+.badge-success {
+    background-color: #28a745; /* Verde */
+}
+
+/* Color para el estado 'SUSPENDIDO' (badge-warning) */
+.badge-warning {
+    background-color: #da2911; /* Amarillo/Naranja */
+    color: #ebedf0; /* Texto oscuro para mejor contraste */
+}
+
+/* Color para el estado 'INACTIVO' (badge-secondary) */
+.badge-secondary {
+    background-color: #6c757d; /* Gris */
+}
+
+
+
+/* ------------------------------------------- */
+/* Alineación ESPECÍFICA para la tabla de HORARIOS */
+/* ------------------------------------------- */
+
+#correlatividad-table {
+    table-layout: fixed; 
+    width: 100%;
+}
+
+
+
+/* ------------------------------------------- */
+/* BOTONES Y ALERTAS */
+/* ------------------------------------------- */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem; 
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Botones de color */
+.btn-primary { background-color: var(--success-color); color: white; }
+.btn-primary:hover { background-color: #1e7e34; }
+.btn-info { background-color: var(--info-color-custom); color: white; }
+.btn-info:hover { background-color: #0069d9; }
+.btn-danger { background-color: var(--danger-color); color: white; }
+.btn-danger:hover { background-color: #bd2130; }
+.btn-success { background-color: var(--success-color); color: white; }
+.btn-success:hover { background-color: #1e7e34; }
+
+/* Estilos de botones de acción en la tabla (como estaban originalmente) */
+#carreras-table td:last-child, #materias-table td:last-child, #horario-table td:last-child, #correlatividad-table td:last-child, #administrador-table td:last-child { 
+    text-align: left; 
+    white-space: nowrap;
+}
+
+#carreras-table td:last-child .btn:not(:last-child),
+#materias-table td:last-child .btn:not(:last-child),
+#horario-table td:last-child .btn:not(:last-child),
+#administrador-table td:last-child .btn:not(:last-child) {
+    margin-right: 10px;
+}
+
+
+.alert {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.alert.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ------------------------------------------- */
+/* MODAL (Corregido para Aislar Estilos) */
+/* ------------------------------------------- */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Estilos base para modal-content (Ideal para el modal de Carreras) */
+.modal-content {
+    background-color: var(--surface-color);
+    padding: 30px;
+    border-radius: 10px;
+/* REVERTIDO A ANCHO COMPACTO (500px) */
+    max-width: 500px; 
+    width: 90%; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+
+    /* SCROLL y ALTURA MÁXIMA (Aplicable a ambos modales) */
+    max-height: 90vh; 
+    overflow-y: auto; 
+}
+
+/* 🟢 SOBREESCRIBE: Estilo específico para el modal de MATERIAS */
+#materia-modal .modal-content {
+    /* Aumentar ancho SÓLO para el modal de Materias */
+    max-width: 900px; 
+}
+
+#administrador-modal .modal-content {
+    max-width: 850px;
+}
+
+
+.close-btn {
+    /* Posicionamiento y Tamaño de la caja */
+    position: absolute;
+    top: 10px;
+    right: 10px; 
+    width: 30px; 
+    height: 30px; 
+    
+    /* Centrado de la 'X' */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Estilo visual */
+    background-color: #f0f0f0; 
+    color: var(--text-dark); 
+    border-radius: 50%; 
+    font-size: 18px; 
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.close-btn:hover, .close-btn:focus {
+    background-color: var(--danger-color); 
+    color: white; 
+    text-decoration: none;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* 🟢 ESTILOS DE CUADRÍCULA (SÓLO DENTRO DEL FORMULARIO DE MATERIAS) */
+#materia-form .form-grid, #administrador-form .form-grid {
+    display: flex;
+    gap: 30px; 
+    margin-bottom: 20px;
+}
+
+#materia-form .col-1, #materia-form .col-2, #administrador-form .col-1, #administrador-form .col-2 {
+    flex: 1; 
+}
+
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+#btn-save-carrera, #btn-save-materia, #btn-save-admin { 
+    margin-top: 20px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto; 
+    max-width: none; 
+    display: block; 
+}
+
+/* Animación Modal */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- NUEVOS ESTILOS PARA LA FUNCIONALIDAD DE MOSTRAR/OCULTAR CONTRASEÑA --- */
+
+/* Contenedor que permite posicionar el ícono de forma absoluta respecto al input */
+.password-container {
+    position: relative;
+    width: 100%; /* Asegura que tome el ancho completo del form-group */
+}
+
+/* El input debe tener un padding a la derecha para no tapar el ícono */
+.password-container input {
+    padding-right: 40px !important; /* Ajusta este valor si es necesario */
+}
+
+/* Estilo y posición del ícono del ojo */
+.toggle-password {
+    position: absolute;
+    top: 50%; /* Centra verticalmente */
+    right: 15px; /* Margen a la derecha */
+    transform: translateY(-50%); /* Ajuste fino de centrado */
+    cursor: pointer;
+    color: #555;
+    font-size: 1.1em;
+    transition: color 0.2s;
+}
+
+.toggle-password:hover {
+    color: var(--color-primary); /* Asumiendo que --color-primary es tu color principal */
+}
+
+/* ------------------------------------------- */
+/* RESPONSIVIDAD */
+/* ------------------------------------------- */
+@media (max-width: 992px) {
+.sidebar {
+    width: 80px;
+}
+.sidebar-header h2 {
+    font-size: 0;
+}
+.nav-item span {
+    display: none;
+}
+.nav-item {
+    justify-content: center;
+    padding: 15px 0;
+}
+.nav-item i {
+    margin-right: 0;
+}
+.nav-item:hover, .nav-item.active {
+    padding-left: 0;
+}
+.main-content {
+    padding: 15px;
+}
+/* Asegurar que la barra de acciones se vea bien en tabletas */
+.actions-bar {
+    flex-direction: column;
+    align-items: flex-start;
+}
+.filter-group {
+    margin-bottom: 15px;
+}
+#carrera-select {
+    min-width: 150px;
+}
+    
+/* 🟢 RESPONSIVIDAD MODAL: Vuelve a 1 columna en pantallas pequeñas */
+#materia-form .form-grid {
+    flex-direction: column; 
+    gap: 0; 
+}
+}
+
+@media (max-width: 576px) {
+.main-header {
+    flex-direction: column;
+    align-items: flex-start;
+}
+.user-info {
+    margin-top: 10px;
+}
+/* Ajuste para que los botones de guardar ocupen todo el ancho en móviles */
+#btn-save-carrera, #btn-save-materia {
+    width: 100%;
+    max-width: none;
+}
+}

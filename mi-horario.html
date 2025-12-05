@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Horario Personalizado - IES N°6</title>
+    <link rel="stylesheet" href="Estilos/estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo-link">
+                <img src="Multimedia/logo_IES 6.png" alt="Logo IES-6" class="logo">
+            </a>
+        </div>
+        <nav class="header-right">
+            <ul>
+                <li><a href="index.html" class="login-btn">Inicio</a></li>
+                
+                <li class="dropdown" id="carreras-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="carreras-dropdown-button">Carreras</a>
+                    <ul class="dropdown-content" id="carreras-dropdown">
+                        </ul>
+                </li>
+                <li class="dropdown" id="contacto-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="contacto-dropdown-button">Contacto</a>
+                    <ul class="dropdown-content" id="contacto-dropdown">
+                        <li><a href="https://wa.me/5493884869773" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="mailto:marlenemarilina@gmail.com"><i class="fas fa-envelope"></i> Correo Electrónico</a></li>
+                        <li><a href="tel:+5493884869773"><i class="fas fa-phone"></i> Teléfono</a></li>
+                        <li><a href="https://facebook.com/ies6" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="https://instagram.com/ies6" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </li>
+                <li><a href="acceso.html" class="login-btn">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="schedule-page-container">
+            <h1>Mi Horario Personalizado</h1>
+
+            <div class="controls-and-schedule">
+                <div class="schedule-controls">
+                    
+                    <div class="controls-flex-row">
+                        <div class="selection-box">
+                            <div class="control-group">
+                                <label for="carrera-select">Carrera:</label>
+                                <select id="carrera-select">
+                                    <option value="">Selecciona una carrera</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="anio-select">Año:</label>
+                                <select id="anio-select" disabled>
+                                    <option value="">Selecciona un año</option>
+                                </select>
+                            </div>
+                            <div class="control-group materia-add-container">
+                                <label for="materia-select">Agregar Materia:</label>
+                                <select id="materia-select" disabled>
+                                    <option value="">Selecciona una materia</option>
+                                </select>
+                                <button id="add-materia-btn" class="add-button" disabled>
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="selected-materias-sidebar">
+                            <h3>Materias Seleccionadas</h3>
+                            <ul id="selected-materias-list">
+                            </ul>
+                            
+                            <div class="schedule-actions">
+                                <button id="print-schedule-btn" class="action-btn"><i class="fas fa-print"></i> Imprimir Horario</button>
+                                <button id="download-pdf-btn" class="action-btn"><i class="fas fa-file-pdf"></i> Descargar PDF</button>
+                                <button id="export-ics-btn" class="action-btn"><i class="fas fa-calendar-alt"></i> Exportar (ICS)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="schedule-display-area">
+                    <div class="schedule-grid-container">
+                        <table class="schedule-table-custom">
+                            <thead>
+                                <tr>
+                                    <th class="split-header-cell">
+                                        <span class="header-text-day">Días</span>
+                                        <span class="header-text-time">Horarios</span>
+                                    </th>
+                                    <th>Lunes</th>
+                                    <th>Martes</th>
+                                    <th>Miércoles</th>
+                                    <th>Jueves</th>
+                                    <th>Viernes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="conflict-modal" class="modal">
+        <div class="modal-content conflict-modal-content">
+            <span class="close-button">&times;</span>
+            <div class="conflict-icon-container">
+                <i class="fas fa-exclamation-triangle conflict-icon"></i>
+            </div>
+            <h2>¡Conflicto de Horario!</h2>
+            <p id="conflict-message"></p>
+            <button class="ok-button">Aceptar</button>
+        </div>
+    </div>
+    </main>
+
+    <footer class="footer">
+        © 2025 IES N°6 – Proyecto de Gestión de Cursado
+    </footer>
+
+    <div class="floating-chatbot-container">
+        <button id="chatbot-toggle" class="chatbot-toggle-button">
+            <i class="fas fa-comment-dots"></i> 
+        </button>
+
+        <div id="chatbot-window" class="chatbot-window hidden">
+            <div class="chatbot-header">
+                Asistente Virtual IES N°6 
+                <button id="chatbot-close-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                
+            </div>
+            <div class="chat-input-container">
+                <input type="text" 
+                       id="chat-input" 
+                       placeholder="Escribe tu consulta...">
+                <button id="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Scripts/chatbot.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="Scripts/menu.js"></script> 
+    <script src="Scripts/mi-horario.js"></script>
+</body>
+</html>

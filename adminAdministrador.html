@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Administradores</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="Estilos/admin.css"> 
+    
+    </head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Panel de Administración</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                </nav>
+            
+            <div class="sidebar-footer">
+                <p style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.9em; display: none;">
+                    <i class="fas fa-user-circle"></i> <span id="user-display-sidebar">Cargando...</span><br>
+                    <span id="role-display-sidebar" style="font-weight: bold;">Rol...</span>
+                </p>
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="content-title">Gestión de Administradores</h1> 
+                <div class="user-info"> 
+                    <p style="text-align: right; margin: 0;">
+                        Bienvenido <span id="user-display">Cargando...</span> (<span id="role-display" style="font-weight: bold;">Rol...</span>) <i class="fas fa-user-circle"></i>
+                    </p>
+                </div>
+            </header>
+
+            <section id="content-area" class="card">
+                <p class="subtitle" style="margin-bottom: 20px;">
+                    
+                </p>
+
+                <div id="administrador-alert-message" class="alert hidden" role="alert"></div>
+
+                <div class="actions-bar">
+                    <button id="btn-crear-admin" class="btn btn-primary" onclick="window.openCreateAdministradorModal()">
+                        <i class="fas fa-plus"></i>Agregar Administrador
+                    </button>
+                </div>
+                
+                <div id="administrador-table-container" class="table-container">
+                    <table id="administrador-table" class="data-table">
+                        <thead>  
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                
+            </section>
+        </main>
+    </div>
+
+    <div id="administrador-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="window.closeAdministradorModal()">&times;</button>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <h3 id="modal-title">Crear Nuevo Administrador</h3>
+            </div>
+            
+            <div id="modal-message" class="alert hidden"></div> 
+            
+            <form id="administrador-form">
+                <input type="hidden" id="administrador-id">
+                
+                <div class="form-grid">
+                    
+                    <div class="col-1">
+                        <div class="form-group">
+                            <label for="nombre_administrador">Nombre Completo:</label>
+                            <input type="text" id="nombre_administrador" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dni">DNI:</label>
+                            <input type="text" id="dni">
+                        </div>
+                    </div>
+                    
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label for="telefono">Teléfono:</label>
+                            <input type="text" id="telefono">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rol">Rol:</label>
+                            <select id="rol" required>
+                                <option value="">-- Seleccionar Rol --</option>
+                                <option value="Rector">Rector</option>
+                                <option value="Coordinador">Coordinador</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="estado-group" style="display: none;">
+                            <label for="estado">Estado del Administrador:</label>
+                            <select id="estado" required>
+                                <option value="activo">Activo</option>
+                                <option value="suspendido">Suspendido</option>
+                                </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contraseña">Contraseña:</label>
+                            <div class="password-container">
+                                <input type="password" id="contraseña" minlength="8">
+                                <i class="fas fa-eye toggle-password" id="toggle-password"></i>
+                            </div>
+                            <small class="form-text text-muted" id="password-help">
+    
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" id="btn-save-admin">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="Scripts/nav.js"></script> 
+    <script type="module" src="Scripts/adminAdministrador.js"></script> 
+    
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f7f9fb; 
+        }
+        .card { 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); 
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .message-success { background-color: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+        .message-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+    </style>
+    <script>
+        // URL del endpoint de restablecimiento de contraseña en el backend
+        const RESET_PASSWORD_URL = 'http://localhost:3000/api/auth/reset-password';
+
+        let resetToken = null;
+
+        /**
+         * Muestra mensajes de estado en la caja de mensajes
+         * @param {string} text - El texto del mensaje.
+         * @param {'success'|'error'|'info'} type - El tipo de mensaje.
+         */
+        function showMessageBox(text, type = 'info') {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'message-success', 'message-error', 'bg-blue-100', 'text-blue-700');
+            
+            if (type === 'success') {
+                messageBox.classList.add('message-success');
+            } else if (type === 'error') {
+                messageBox.classList.add('message-error');
+            } else {
+                // Para mensajes 'info'
+                messageBox.classList.add('bg-blue-100', 'text-blue-700', 'border', 'border-blue-300');
+            }
+        }
+
+        // =========================================================
+        // 🟢 NUEVA LÓGICA DE VALIDACIÓN DE CONTRASEÑA
+        // =========================================================
+
+        /**
+         * Valida que la contraseña cumpla con los requisitos de seguridad.
+         */
+        const validatePassword = (password) => {
+            if (password.length < 8) {
+                return { valid: false, message: "La contraseña debe tener al menos 8 caracteres." };
+            }
+            if (!/[A-Z]/.test(password)) {
+                return { valid: false, message: "La contraseña debe contener al menos una letra mayúscula." };
+            }
+            if (!/[a-z]/.test(password)) {
+                return { valid: false, message: "La contraseña debe contener al menos una letra minúscula." };
+            }
+            if (!/[0-9]/.test(password)) {
+                return { valid: false, message: "La contraseña debe contener al menos un número." };
+            }
+            // Permite caracteres especiales comunes
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                return { valid: false, message: "La contraseña debe contener al menos un carácter especial (ej: !@#$)." };
+            }
+
+            return { valid: true, message: "" };
+        };
+
+
+        /**
+         * Maneja el envío del formulario de nueva contraseña.
+         */
+        async function handleResetPassword(event) {
+            event.preventDefault();
+
+            if (!resetToken) {
+                showMessageBox('Error de seguridad: Token de restablecimiento no encontrado.', 'error');
+                return;
+            }
+
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const submitButton = document.getElementById('submit-button');
+            
+            // 🔴 CAMBIO CLAVE: Aplicar la nueva validación de complejidad
+            const validationResult = validatePassword(newPassword);
+            if (!validationResult.valid) {
+                showMessageBox(validationResult.message, 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showMessageBox('Las contraseñas no coinciden.', 'error');
+                return;
+            }
+
+            showMessageBox('Enviando nueva contraseña, por favor espera...', 'info');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Procesando...';
+
+            try {
+                const response = await fetch(RESET_PASSWORD_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: resetToken,
+                        newPassword: newPassword, // Coincide con lo que espera el authController.js
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessageBox(data.message || 'Contraseña restablecida con éxito. Redirigiendo al login...', 'success');
+                    
+                    // Redirigir al login después de 3 segundos
+                    setTimeout(() => {
+                        window.location.href = 'acceso.html'; 
+                    }, 3000);
+                } else {
+                    // Manejar error de token expirado o inválido (401)
+                    showMessageBox(data.message || 'Error al restablecer. El enlace es inválido o ha expirado.', 'error');
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Cambiar Contraseña';
+                }
+
+            } catch (error) {
+                console.error('Error de conexión con el backend:', error);
+                showMessageBox('Error de conexión con el servidor. Verifica que el backend esté activo.', 'error');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Cambiar Contraseña';
+            }
+        }
+
+        // =========================================================
+        // 🟢 LÓGICA DE VISIBILIDAD DE CONTRASEÑA
+        // =========================================================
+        /**
+         * Alterna el tipo de input de la contraseña entre 'password' y 'text'.
+         */
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (!passwordInput || !toggleIcon) return;
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+
+        /**
+         * Inicialización: Obtiene el token de la URL y prepara el formulario.
+         */
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            
+            if (!token) {
+                showMessageBox('Falta el token de seguridad. Por favor, solicita un nuevo enlace de restablecimiento de contraseña desde la página de login.', 'error');
+                // Ocultamos el formulario si no hay token
+                document.getElementById('reset-form').classList.add('hidden'); 
+                return;
+            }
+            
+            resetToken = token;
+            const form = document.getElementById('reset-form');
+            if (form) {
+                form.addEventListener('submit', handleResetPassword);
+            }
+            showMessageBox('Token de seguridad encontrado. Ingresa y confirma tu nueva contraseña.', 'info');
+
+            // 🟢 ADICIÓN: Listeners para el toggle de contraseña
+            document.getElementById('toggle-new-password-icon')?.addEventListener('click', () => {
+                togglePasswordVisibility('new-password', 'toggle-new-password-icon');
+            });
+
+            document.getElementById('toggle-confirm-password-icon')?.addEventListener('click', () => {
+                togglePasswordVisibility('confirm-password', 'toggle-confirm-password-icon');
+            });
+        };
+    </script>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="card bg-white p-8 rounded-xl w-full max-w-md shadow-lg">
+        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-6">🔑 Nueva Contraseña</h1>
+        <p class="text-center text-gray-600 mb-6 border-b pb-4">Este enlace es temporal. Ingresa una contraseña segura para tu cuenta de administrador.</p>
+
+        <div id="message-box" class="hidden p-3 rounded-lg text-sm mb-6 border font-medium"></div>
+
+        <form id="reset-form">
+            <div class="mb-4">
+                <label for="new-password" class="block text-sm font-semibold text-gray-700 mb-2">Nueva Contraseña</label>
+                <div class="relative"> <input 
+                        type="password" 
+                        id="new-password" 
+                        required
+                        minlength="8" autocomplete="new-password"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 pr-10"
+                        placeholder="Mínimo 8 caracteres"
+                    >
+                    <i id="toggle-new-password-icon" class="fas fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-indigo-600 cursor-pointer"></i>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Debe incluir mayúscula, minúscula, número y símbolo.</p> </div>
+
+            <div class="mb-6">
+                <label for="confirm-password" class="block text-sm font-semibold text-gray-700 mb-2">Confirmar Contraseña</label>
+                <div class="relative"> <input 
+                        type="password" 
+                        id="confirm-password" 
+                        required
+                        minlength="8" autocomplete="new-password"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 pr-10"
+                        placeholder="Repite la nueva contraseña"
+                    >
+                    <i id="toggle-confirm-password-icon" class="fas fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-indigo-600 cursor-pointer"></i>
+                </div>
+            </div>
+
+            <button 
+                type="submit" 
+                id="submit-button" 
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-200 disabled:bg-indigo-400"
+            >
+                Cambiar Contraseña
+            </button>
+            
+            <p class="text-center text-sm text-gray-500 mt-4">
+                ¿Recordaste tu contraseña? <a href="acceso.html" class="text-indigo-600 hover:text-indigo-800 font-medium transition duration-150">Volver a acceder</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Carreras</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="Estilos/admin.css"> 
+</head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Panel de Administración</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="content-title">Gestión de Carreras</h1> 
+                <div class="user-info">
+                    Bienvenido&nbsp;<span id="user-display">Cargando...</span>
+                    &nbsp;(<span id="role-display" style="font-weight: bold; margin-right: 5px;">Rol...</span>)
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <section id="content-area" class="card">
+                <div class="actions-bar">
+                    <button id="btn-crear-carrera" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Agregar Carrera
+                    </button>
+                    </div>
+                
+                <div class="table-container">
+                    <table id="carreras-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre de carrera</th>
+                                <th>Duración (Años)</th>
+                                <th>Modalidad</th>
+                                <th>Año de Aprobación</th>
+                                <th>Coordinador a Cargo</th> 
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination-controls">
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <div id="carrera-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+             <div style="text-align: center; margin-top: 20px;">
+            <h3 id="modal-title">Agregar Carrera</h3>
+             </div>
+            <div id="modal-message" class="alert hidden"></div> 
+            <form id="carrera-form">
+                <input type="hidden" id="carrera-id">
+                
+                <div class="form-group">
+                    <label for="nombre_carrera">Nombre de la Carrera</label>
+                    <input type="text" id="nombre_carrera" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="duracion">Duración (Años)</label>
+                    <input type="number" id="duracion" required min="1" max="10">
+                </div>
+                
+                <div class="form-group">
+                    <label for="modalidad">Modalidad</label>
+                    <input list="modalidad_options" id="modalidad" required>
+                <datalist id="modalidad_options">
+                    <option value="Virtual">
+                    <option value="Presencial">
+                    <option value="Semipresencial">
+                </datalist>
+                </div>
+                
+                <div class="form-group">
+                    <label for="año_aprobacion">Año de Aprobación</label>
+                    <input type="number" id="año_aprobacion" required min="1950" max="2099">
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_coordinador">Coordinador a Cargo</label>
+                    <select id="id_coordinador" required>
+                        <option value="">-- Seleccione un Coordinador --</option>
+                        </select>
+                </div>
+
+                <div class="form-group" id="estado-group" style="display: none;">
+                    <label for="estado">Estado de la Carrera:</label>
+                    <select id="estado" required>
+                        <option value="activa">Activa</option>
+                        <option value="cerrada">Cerrada</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-success" id="btn-save-carrera">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="Scripts/nav.js"></script>
+    <script type="module" src="Scripts/adminCarrera.js"></script>
+    
+</body>
+</html>

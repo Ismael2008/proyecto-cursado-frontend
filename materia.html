@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="materia-titulo">Cargando Materia...</title>
+    <link rel="stylesheet" href="Estilos/estilos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo-link">
+                <img src="Multimedia/logo_IES 6.png" alt="Logo IES-6" class="logo">
+            </a>
+        </div>
+        <nav class="header-right">
+            <ul>
+                <li><a href="index.html" class="login-btn">Inicio</a></li>
+                
+                <li class="dropdown" id="carreras-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="carreras-dropdown-button">Carreras</a>
+                    <ul class="dropdown-content" id="carreras-dropdown">
+                        </ul>
+                </li>
+                <li><a href="mi-horario.html" class="login-btn">Mi Horario</a></li>
+                <li class="dropdown" id="contacto-menu-item">
+                    <a href="#" class="login-btn dropdown-btn" id="contacto-dropdown-button">Contacto</a>
+                    <ul class="dropdown-content" id="contacto-dropdown">
+                        <li><a href="https://wa.me/5493884869773" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="mailto:marlenemarilina@gmail.com"><i class="fas fa-envelope"></i> Correo Electrónico</a></li>
+                        <li><a href="tel:+5493884869773"><i class="fas fa-phone"></i> Teléfono</a></li>
+                        <li><a href="https://facebook.com/ies6" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="https://instagram.com/ies6" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </li>
+                <li><a href="acceso.html" class="login-btn">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="materia-header-box">
+            <h1 id="nombre-materia"></h1>
+            <p class="subtitulo" id="materia-subtitulo"></p>
+        </div>
+
+        <div class="materia-container">
+            <aside class="materia-sidebar">
+                <div class="info-box">
+                    <h3>Detalle de la Materia</h3>
+                    <p><strong>Año:</strong> <span id="materia-anio"></span></p>
+                    <p><strong>Campo de Formación:</strong> <span id="materia-campo"></span></p>
+                    <p><strong>Tipo de Cursada:</strong> <span id="materia-modalidad"></span></p>
+                    <p><strong>Formato:</strong> <span id="materia-formato"></span></p>
+                    <p><strong>Horas Semanales:</strong> <span id="materia-horas-sem"></span></p>
+                    <p><strong>Horas Anuales:</strong> <span id="materia-horas-anual"></span></p>
+                    <p><strong>Acreditación:</strong> <span id="materia-acreditacion"></span></p>
+                </div>
+                
+                <div class="seccion-materia">
+                    <h2 class="seccion-titulo">Horarios de la materia</h2>
+                    <ul id="horarios-materia"></ul>
+                </div>
+
+            </aside>
+            <section class="materia-main">
+                <div class="seccion-materia">
+                    <h2 class="seccion-titulo">Requisitos para cursar la materia</h2>
+                    <ul id="requisitos-cursar"></ul>
+                </div>
+
+                <div class="seccion-materia">
+                    <h2 class="seccion-titulo">Requisitos para rendir o promocionar la materia</h2>
+                    <ul id="requisitos-rendir"></ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        © 2025 IES N°6 – Proyecto de Gestión de Cursada
+    </footer>
+
+    <div class="floating-chatbot-container">
+        <button id="chatbot-toggle" class="chatbot-toggle-button">
+            <i class="fas fa-comment-dots"></i> 
+        </button>
+
+        <div id="chatbot-window" class="chatbot-window hidden">
+            <div class="chatbot-header">
+                Asistente Virtual IES N°6 
+                <button id="chatbot-close-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                
+            </div>
+            <div class="chat-input-container">
+                <input type="text" 
+                       id="chat-input" 
+                       placeholder="Escribe tu consulta...">
+                <button id="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Scripts/menu.js"></script>
+    <script src="Scripts/chatbot.js"></script>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        
+        // =========================================================
+        // 1. FUNCIONES AUXILIARES PARA CONSOLIDACIÓN
+        // =========================================================
+        const ordenDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+        function convertirHoraAMinutos(horaStr) {
+            const partes = horaStr.split(':').map(Number);
+            const horas = partes[0];
+            const minutos = partes[1];
+            const segundos = partes.length > 2 ? partes[2] : 0;
+            return (horas * 60) + minutos + (segundos / 60);
+        }
+
+        function compararHorarios(a, b) {
+            // a y b son objetos { dia_semana, hora_inicio, hora_fin }
+            const diaA = ordenDias.indexOf(a.dia_semana);
+            const diaB = ordenDias.indexOf(b.dia_semana);
+            if (diaA !== diaB) {
+                return diaA - diaB;
+            }
+            return a.hora_inicio.localeCompare(b.hora_inicio);
+        }
+
+
+        // =========================================================
+        // 2. FUNCIÓN DE CONSOLIDACIÓN CON TOLERANCIA
+        // =========================================================
+        function consolidarHorarios(horarios) {
+            if (!horarios || horarios.length === 0) return [];
+            
+            // Paso 1: Convertir las cadenas de texto a objetos para manipularlas
+            const horariosObjetos = horarios.map(str => {
+                // Formato: "Día, HH:MM:SS - HH:MM:SS"
+                const [dia, tiempos] = str.split(', ');
+                const [hora_inicio, hora_fin] = tiempos.split(' - ');
+                return { dia_semana: dia, hora_inicio, hora_fin, original: str };
+            });
+
+            // Paso 2: Ordenar los objetos antes de consolidar
+            horariosObjetos.sort(compararHorarios);
+
+            const horariosConsolidados = [];
+            let bloqueActual = null;
+            const TOLERANCIA_MINUTOS = 5; 
+
+            for (const horario of horariosObjetos) {
+                if (bloqueActual === null) {
+                    bloqueActual = { ...horario }; 
+                } else {
+                    const finActualEnMinutos = convertirHoraAMinutos(bloqueActual.hora_fin);
+                    const inicioSiguienteEnMinutos = convertirHoraAMinutos(horario.hora_inicio);
+                    const diferencia = inicioSiguienteEnMinutos - finActualEnMinutos;
+                    
+                    const esConsecutivo = (
+                        horario.dia_semana === bloqueActual.dia_semana &&
+                        diferencia >= 0 && diferencia <= TOLERANCIA_MINUTOS
+                    );
+                    
+                    if (esConsecutivo) {
+                        // Extiende el bloque actual
+                        bloqueActual.hora_fin = horario.hora_fin;
+                    } else {
+                        // Guarda el bloque actual y empieza uno nuevo
+                        horariosConsolidados.push(bloqueActual);
+                        bloqueActual = { ...horario }; 
+                    }
+                }
+            }
+            if (bloqueActual !== null) {
+                horariosConsolidados.push(bloqueActual);
+            }
+
+            // Paso 3: Convertir de nuevo a cadenas de texto para la lista <ul>
+            return horariosConsolidados.map(b => 
+                `${b.dia_semana}, ${b.hora_inicio} - ${b.hora_fin}`
+            );
+        }
+        
+        // Función auxiliar para obtener el ID de la URL
+        function getParameterByName(name) {
+            // ... (función existente) ...
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const url = window.location.href;
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Nueva función para registrar la visita de forma independiente (más robusta)
+        async function registrarVisita(idMateria) {
+            // ... (función existente) ...
+            try {
+                // RUTA CORREGIDA: /api/destacadas/:id/vista
+                const response = await fetch(`${API_BASE_URL}/destacadas/${idMateria}/vista`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    console.log(`[OK] Vista registrada para ID: ${idMateria}`);
+                } else {
+                    console.warn(`[WARN] El servidor no pudo registrar la vista: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('[ERROR RED] No se pudo conectar para registrar la vista:', error);
+            }
+        }
+
+        async function cargarDetalleMateria() {
+            const idMateria = getParameterByName('id');
+            const mainContent = document.querySelector('.materia-main');
+            const tituloPrincipal = document.getElementById('nombre-materia');
+            const subtituloPrincipal = document.getElementById('materia-subtitulo');
+            const tituloPagina = document.getElementById('materia-titulo');
+
+            if (!idMateria) {
+                mainContent.innerHTML = '<p>Error: ID de materia no especificado en la URL.</p>';
+                tituloPagina.textContent = 'Error';
+                tituloPrincipal.textContent = 'Materia no encontrada';
+                return;
+            }
+
+            registrarVisita(idMateria); 
+
+            try {
+                const url = `${API_BASE_URL}/materias/${idMateria}`;
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) {
+                    throw new Error(`Error en el servidor: ${respuesta.status}`);
+                }
+                const materia = await respuesta.json();
+                
+                if (!materia || Object.keys(materia).length === 0) {
+                    mainContent.innerHTML = '<p>Materia no encontrada.</p>';
+                    tituloPagina.textContent = 'Materia no encontrada';
+                    tituloPrincipal.textContent = 'Materia no encontrada';
+                    return;
+                }
+
+                // Llenar datos de la barra lateral, títulos y requisitos... (el código no se modificó)
+
+                // ... (código para llenar títulos, detalles y requisitos) ...
+                tituloPagina.textContent = materia.nombre_materia;
+                tituloPrincipal.textContent = materia.nombre_materia;
+
+                document.getElementById('materia-anio').textContent = materia.año || 'N/A';
+                document.getElementById('materia-campo').textContent = materia.campo_formacion || 'N/A';
+                document.getElementById('materia-modalidad').textContent = materia.modalidad || 'N/A';
+                document.getElementById('materia-formato').textContent = materia.formato || 'N/A';
+                document.getElementById('materia-horas-sem').textContent = materia.horas_semanales || 'N/A';
+                document.getElementById('materia-horas-anual').textContent = materia.total_horas_anuales || 'N/A';
+                document.getElementById('materia-acreditacion').textContent = materia.acreditacion || 'N/A';
+
+                const requisitosCursarUl = document.getElementById('requisitos-cursar');
+                requisitosCursarUl.innerHTML = ''; 
+                if (materia.requisitos_cursar && materia.requisitos_cursar.length > 0) {
+                    materia.requisitos_cursar.forEach(req => {
+                        const li = document.createElement('li');
+                        li.textContent = req; 
+                        requisitosCursarUl.appendChild(li);
+                    });
+                } else {
+                    requisitosCursarUl.innerHTML = '<li>No hay materias correlativas.</li>';
+                }
+
+                const requisitosRendirUl = document.getElementById('requisitos-rendir');
+                requisitosRendirUl.innerHTML = '';
+                if (materia.requisitos_rendir && materia.requisitos_rendir.length > 0) {
+                    materia.requisitos_rendir.forEach(req => {
+                        const li = document.createElement('li');
+                        li.textContent = req;
+                        requisitosRendirUl.appendChild(li);
+                    });
+                } else {
+                    requisitosRendirUl.innerHTML = '<li>No hay materias correlativas.</li>';
+                }
+
+                // Llenar horarios con la nueva lógica de CONSOLIDACIÓN
+                const horariosUl = document.getElementById('horarios-materia');
+                if (materia.horarios && materia.horarios.length > 0) {
+                    
+                    // PASO CLAVE: CONSOLIDAR ANTES DE MOSTRAR
+                    const horariosConsolidados = consolidarHorarios(materia.horarios);
+                    
+                    horariosUl.innerHTML = '';
+                    horariosConsolidados.forEach(horarioStr => {
+                        const li = document.createElement('li');
+                        // Usamos la cadena de texto consolidada
+                        li.textContent = horarioStr;
+                        horariosUl.appendChild(li);
+                    });
+                } else {
+                    horariosUl.innerHTML = '<li>No se encontraron horarios.</li>';
+                }
+
+            } catch (error) {
+                console.error("Error al obtener el detalle de la materia:", error);
+                mainContent.innerHTML = '<p>Ocurrió un error al cargar el detalle de la materia.</p>';
+                tituloPagina.textContent = 'Error';
+                tituloPrincipal.textContent = 'Error de carga';
+            }
+        }
+
+        window.addEventListener('load', cargarDetalleMateria);
+    </script>
+</body>
+</html>

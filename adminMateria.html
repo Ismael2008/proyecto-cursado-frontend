@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Materias</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="Estilos/admin.css"> 
+</head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Panel de Administración</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="content-title">Gestión de Materias</h1> 
+                <div class="user-info">
+                    Bienvenido&nbsp;<span id="user-display">Cargando...</span>
+                    &nbsp;(<span id="role-display" style="font-weight: bold; margin-right: 5px;">Rol...</span>)
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <section id="content-area" class="card">
+                
+                <div class="actions-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label for="carrera-select">Carreras:</label>
+                            <select id="carrera-select" required>
+                                <option value="">-- Cargando Carreras... --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="btn-crear-materia" class="btn btn-primary" style="display: none;">
+                        <i class="fas fa-plus"></i> Agregar Materia
+                    </button>
+                </div>
+
+                <div id="materia-message" class="alert hidden"></div> 
+                
+                <div class="table-container" style="display: none;">
+                    <table id="materias-table">
+                        <thead>
+                            </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <div id="materia-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+             <div style="text-align: center; margin-top: 20px;">
+            <h3 id="modal-title">Agregar Materia</h3>
+            </div>
+            <div id="modal-message" class="alert hidden"></div> 
+            
+            <form id="materia-form">
+                <input type="hidden" id="materia-id">
+                
+                <div class="form-group">
+                    <label for="materia-carrera-id">Carrera</label>
+                    <select id="materia-carrera-id" required>
+                        </select>
+                </div>
+                
+                <div class="form-grid">
+                <div class="col-1">
+                <div class="form-group">
+                    <label for="nombre_materia">Nombre de la Materia</label>
+                    <input type="text" id="nombre_materia" required maxlength="100">
+                </div>
+                
+                <div class="form-group">
+                    <label for="anio">Año de Cursado</label>
+                    <input type="number" id="anio" required min="1" max="6">
+                </div>
+                
+                <div class="form-group">
+                    <label for="campo_formacion">Campo de Formación</label>
+                    <input list="campo_formacion_options" id="campo_formacion" required>
+    
+    <datalist id="campo_formacion_options">
+        <option value="General">
+        <option value="Específica">
+        <option value="Práctica Profesionalizante">
+    </datalist>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modalidad">Tipo de Cursada</label>
+                    <input list="modalidad_options" id="modalidad" required>
+                <datalist id="modalidad_options">
+                    <option value="Anual">
+                    <option value="Cuatrimestral">
+                </datalist>
+                </div>
+                </div>
+                
+                <div class="col-2">
+                <div class="form-group">
+                    <label for="formato">Formato</label>
+                    <input list="formato_options" id="formato" required>
+                <datalist id="formato_options">
+                    <option value="Materia">
+                    <option value="Trabajo de Campo">
+                    <option value="Taller">
+                    <option value="Seminario">
+                    <option value="Práctica Docente">
+                </datalist>
+                </div>
+                
+                <div class="form-group">
+                    <label for="horas_semanales">Horas Semanales</label>
+                    <input type="number" id="horas_semanales" required min="1" max="100">
+                </div>
+                
+                <div class="form-group">
+                    <label for="total_horas_anuales">Total Horas Anuales</label>
+                    <input type="number" id="total_horas_anuales" required min="1" max="500">
+                </div>
+                
+                <div class="form-group">
+                    <label for="acreditacion">Acreditación</label>
+                    <input list="acreditacion_options" id="acreditacion" required>
+                <datalist id="acreditacion_options">
+                    <option value="Examen Final">
+                    <option value="Promoción">
+                    <option value="Promoción/Examen Final">
+                </datalist>
+                </div>
+                </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success" id="btn-save-materia">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="Scripts/nav.js"></script>
+    <script type="module" src="Scripts/adminMateria.js"></script> 
+    
+</body>
+</html>
