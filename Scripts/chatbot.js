@@ -1,7 +1,7 @@
 // Archivo: frontend/Scripts/chatbot.js
 
 // --- CONSTANTES ---
-const CHATBOT_URL = 'http://localhost:3000/api/chatbot'; 
+const CHATBOT_URL = 'https://proyecto-cursado-backend.onrender.com/api/chatbot'; 
 const CHAT_INPUT = document.getElementById('chat-input');
 const CHAT_SEND_BTN = document.getElementById('chat-send-btn');
 const CHAT_MESSAGES = document.getElementById('chatbot-messages');

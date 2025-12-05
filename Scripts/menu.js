@@ -4,7 +4,7 @@
  * y la lógica de toggle de los dropdowns (Carreras y Contacto).
  */
 
-const CARRERAS_URL = 'http://localhost:3000/api/carreras';
+const CARRERAS_URL = 'https://proyecto-cursado-backend.onrender.com/api/carreras';
 
 // 🟢 MAPA DE CARRERAS: ELIMINADO. Ahora todas las carreras usan la página genérica 'carrera.html'.
 

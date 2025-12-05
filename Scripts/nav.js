@@ -1,7 +1,7 @@
 // Scripts/nav.js
 // Lógica de Navegación, Estado Activo del Menú y Seguridad (Logout/Token Check)
 
-export const API_BASE_URL = 'http://localhost:3000/api/admin'; 
+export const API_BASE_URL = 'https://proyecto-cursado-backend.onrender.com/api/admin'; 
 
 // Mapeo de la entidad (data-entity) al nombre del archivo HTML
 const NAV_MAP = {

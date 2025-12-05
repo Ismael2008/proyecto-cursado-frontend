@@ -1,7 +1,7 @@
 // mi-horario.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const API_BASE_URL = 'http://localhost:3000/api'; 
+    const API_BASE_URL = 'https://proyecto-cursado-backend.onrender.com/api'; 
 
     const carreraSelect = document.getElementById('carrera-select');
     const anioSelect = document.getElementById('anio-select');
