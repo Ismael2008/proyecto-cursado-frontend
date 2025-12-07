@@ -724,6 +724,24 @@ body {
         flex-direction: column; 
         gap: 0; 
     }
+
+    /* ---------------------------------------------------- */
+    /* 8. Habilitar Scroll Horizontal para Tablas Largas */
+    /* ---------------------------------------------------- */
+    .table-container {
+        /* 🟢 CORRECCIÓN: Contenedor que permite el scroll horizontal */
+        overflow-x: auto; /* Permite desplazamiento horizontal solo si es necesario */
+        width: 100%; /* Asegura que ocupe todo el ancho disponible */
+        -webkit-overflow-scrolling: touch; /* Mejora el desplazamiento táctil en iOS */
+        padding-bottom: 10px; /* Espacio para que no tape la barra de scroll */
+    }
+
+    .table-container table {
+        /* Fuerza a la tabla a mantener su ancho natural, permitiendo que el contenedor haga scroll */
+        width: 100%; 
+        min-width: 700px; /* Asegura un ancho mínimo para que las columnas no colapsen */
+        border-collapse: collapse; /* Mantiene la tabla limpia */
+    }
 }
 
 /* 🟢 MEDIA QUERY PARA MÓVILES PEQUEÑOS (<= 576px) */
