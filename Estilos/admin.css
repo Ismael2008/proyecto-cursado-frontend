@@ -781,6 +781,7 @@ body {
         flex-direction: row; /* Apila los botones */
         gap: 5px; /* Espacio entre los botones apilados */
         align-items: center; 
+        justify-content: center;
     }
     
     /* Eliminar el margen horizontal que separaba los botones */
