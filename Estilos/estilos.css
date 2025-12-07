@@ -1549,7 +1549,7 @@ body {
     .menu-toggle { display: block; }
     .nav {
         display: none; position: absolute; top: 50px; left: auto; transform: none; right: 5%;
-        width: 50%; flex-direction: column; background-color: #27374d;
+        width: 30%; flex-direction: column; background-color: #27374d;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 10;
     }
     .nav ul { flex-direction: column; width: 100%; }
