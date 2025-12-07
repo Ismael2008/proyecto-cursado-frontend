@@ -1090,88 +1090,6 @@ body {
     color: white;
 }
 
-
-/* =======================================
-    ESTILOS ESPECÍFICOS PARA LA IMPRESIÓN
-    ======================================= */
-
-@media print {
-    /* 1. OCULTAR ELEMENTOS DE NAVEGACIÓN Y CONTROL */
-
-    .header {
-        display: none !important;
-    }
-
-    .footer {
-        display: none !important;
-    }
-
-    .schedule-page-container h1 {
-        display: none !important;
-    }
-
-    .controls-and-schedule {
-        display: block !important; 
-    }
-
-    .schedule-controls {
-        display: none !important;
-    }
-
-    .selected-materias-sidebar {
-        display: none !important;
-    }
-    
-    /* 2. AJUSTAR EL CONTENEDOR DEL HORARIO */
-
-    .schedule-display-area {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    /* 3. MEJORAR LA TABLA PARA IMPRESIÓN */
-    
-    .schedule-table-custom {
-        width: 100% !important;
-        table-layout: auto !important; 
-        border-collapse: collapse !important;
-        border: 1px solid #000;
-        break-inside: auto !important;
-        min-width: 0 !important;
-    }
-    
-    .schedule-table-custom th, .schedule-table-custom td {
-        border: 1px solid #000 !important;
-        padding: 0.4rem !important;
-        min-width: 0 !important; 
-        table-layout: auto !important;
-    }
-
-    .schedule-table-custom tr {
-        break-after: auto; 
-    }
-    
-    .schedule-item {
-        color: #000 !important; 
-        background-color: #f0f0f0 !important; 
-        border: 1px solid #ccc !important;
-    }
-    
-    .schedule-grid-container {
-        box-shadow: none !important;
-        border: none !important;
-        overflow-x: visible !important;
-    }
-
-   /* Oculta el contenedor flotante del chatbot, incluyendo su botón y ventana */
-    .floating-chatbot-container, 
-    #chatbot-toggle,
-    #chatbot-window {
-        display: none !important;
-    }
-}
-
 /* --- Estilos para el Modal de Conflicto (Solapamiento) --- */
 
 /* Estilo general del modal (fondo oscuro) */
@@ -1472,4 +1390,183 @@ body {
 
 .chat-input-container button:hover {
     background-color: #0891B2;
+}
+
+/* =======================================
+    ESTILOS ESPECÍFICOS PARA LA IMPRESIÓN
+    ======================================= */
+
+@media print {
+    /* 1. OCULTAR ELEMENTOS DE NAVEGACIÓN Y CONTROL */
+
+    .header {
+        display: none !important;
+    }
+
+    .footer {
+        display: none !important;
+    }
+
+    .schedule-page-container h1 {
+        display: none !important;
+    }
+
+    .controls-and-schedule {
+        display: block !important; 
+    }
+
+    .schedule-controls {
+        display: none !important;
+    }
+
+    .selected-materias-sidebar {
+        display: none !important;
+    }
+    
+    /* 2. AJUSTAR EL CONTENEDOR DEL HORARIO */
+
+    .schedule-display-area {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* 3. MEJORAR LA TABLA PARA IMPRESIÓN */
+    
+    .schedule-table-custom {
+        width: 100% !important;
+        table-layout: auto !important; 
+        border-collapse: collapse !important;
+        border: 1px solid #000;
+        break-inside: auto !important;
+        min-width: 0 !important;
+    }
+    
+    .schedule-table-custom th, .schedule-table-custom td {
+        border: 1px solid #000 !important;
+        padding: 0.4rem !important;
+        min-width: 0 !important; 
+        table-layout: auto !important;
+    }
+
+    .schedule-table-custom tr {
+        break-after: auto; 
+    }
+    
+    .schedule-item {
+        color: #000 !important; 
+        background-color: #f0f0f0 !important; 
+        border: 1px solid #ccc !important;
+    }
+    
+    .schedule-grid-container {
+        box-shadow: none !important;
+        border: none !important;
+        overflow-x: visible !important;
+    }
+
+   /* Oculta el contenedor flotante del chatbot, incluyendo su botón y ventana */
+    .floating-chatbot-container, 
+    #chatbot-toggle,
+    #chatbot-window {
+        display: none !important;
+    }
+}
+
+/* ================================================================= */
+/* REGLAS DE ADAPTACIÓN (RESPONSIVE DESIGN) - PARA MÓVILES Y TABLETS */
+/* Estas reglas se activan cuando el ancho de la pantalla es de 768px o menos */
+/* ================================================================= */
+@media (max-width: 768px) {
+    
+    /* 1. SOLUCIÓN GENERAL Y EVITAR DESBORDAMIENTO */
+    
+    /* Esta regla es CRUCIAL para evitar que el contenido horizontal desborde y el chatbot se oculte */
+    body {
+        overflow-x: hidden; 
+        min-width: 320px; /* Asegurar un ancho mínimo para celulares muy pequeños */
+    }
+    
+    /* Ajuste del Contenido Principal */
+    .main-content {
+        /* Reducir el padding horizontal de 20px a 10px para maximizar el espacio útil */
+        padding: 10px; 
+    }
+
+    /* 2. SOLUCIÓN PARA EL ENCABEZADO Y MENÚ CORTADOS */
+    
+    /* Ajuste del Encabezado */
+    .header {
+        /* Reducción del padding horizontal (ej. de 50px a 15px) */
+        padding: 15px 15px; 
+    }
+    
+    /* Ocultar el Menú Horizontal y Preparar el Desplegable */
+    .nav {
+        display: none; /* Ocultar el menú horizontal por defecto */
+        position: absolute; 
+        top: 50px; /* Colocarlo justo debajo del header */
+        left: 0;
+        width: 100%;
+        flex-direction: column; /* Apilar los enlaces verticalmente */
+        background-color: #27374d; /* Fondo del header para el menú desplegado */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+    }
+    
+    /* Estilo de los Enlaces en el Menú Desplegable */
+    .nav a {
+        padding: 10px 20px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Mostrar el Ícono del Menú (Asumiendo que tiene la clase .menu-toggle en el HTML) */
+    .menu-toggle {
+        display: block; 
+    }
+
+    /* Clase que JavaScript (menu.js) debe añadir para MOSTRAR el menú */
+    .nav.open {
+        display: flex; 
+    }
+    
+    /* 3. SOLUCIÓN PARA EL PIE DE PÁGINA DESORGANIZADO */
+    
+    .footer {
+        flex-direction: column; /* Forzar que los elementos se apilen verticalmente */
+        text-align: center;
+        padding: 20px 10px; /* Ajustar padding lateral */
+    }
+
+    /* Si el footer usa un contenedor interno (como .footer-content) */
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    
+    /* Asegurar que las secciones internas tengan espacio vertical */
+    .footer-section {
+        margin-bottom: 20px; 
+        width: 100%;
+    }
+
+    /* 4. SOLUCIÓN PARA EL BOTÓN FLOTANTE DEL CHATBOT */
+    /* Reafirmar la posición fija para asegurar que se mantenga en el viewport */
+    .chatbot-toggle {
+        position: fixed; 
+        bottom: 15px; 
+        right: 15px; 
+        z-index: 1000;
+    }
+
+    /* 5. Adaptación Adicional para las Tarjetas/Grillas */
+    /* Si usa una grilla para mostrar carreras o materias, fuerce a una columna */
+    .card-grid, .carreras-list {
+        /* Ejemplo si usa CSS Grid: */
+        display: grid;
+        grid-template-columns: 1fr; /* Una sola columna */
+        gap: 15px;
+    }
 }

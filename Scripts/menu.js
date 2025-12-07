@@ -73,6 +73,34 @@ function toggleContactoDropdown(event) {
  * @param {HTMLElement} targetElement - El elemento DOM (ul/div) donde se inyectarán los elementos.
  * @param {boolean} includeIcon - Si se debe incluir el ícono de graduación (para la lista principal).
  */
+
+// ==========================================================
+// NUEVA Función: Gestión del Menú Hamburguesa (Mobile)
+// ==========================================================
+function toggleMobileMenu() {
+    // 1. Obtener el contenedor principal de la navegación
+    const nav = document.querySelector('.nav');
+    // 2. Obtener el botón de hamburguesa (si quiere cambiar su ícono)
+    // const toggleButton = document.querySelector('.menu-toggle'); 
+
+    if (nav) {
+        // Alternar la clase 'open' que el CSS utiliza para mostrar/ocultar el menú
+        nav.classList.toggle('open');
+        
+        // OPCIONAL: Si el botón de hamburguesa es un ícono (ej. Font Awesome), 
+        // podría alternar su apariencia de ☰ a X.
+        /*
+        if (toggleButton) {
+            toggleButton.classList.toggle('fa-bars');
+            toggleButton.classList.toggle('fa-times');
+        }
+        */
+        
+        // NOTA: Cerramos los dropdowns si abrimos/cerramos el menú principal.
+        document.getElementById('carreras-menu-item')?.classList.remove('dropdown-active');
+        document.getElementById('contacto-menu-item')?.classList.remove('dropdown-active');
+    }
+}
 async function fetchAndRenderCarreras(targetElement, includeIcon = false) {
     if (!targetElement) return;
 
@@ -161,15 +189,27 @@ async function loadCarrerasList() {
 // ==========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cargar el menú dinámico de carreras (Dropdown)
+    // ... [código existente] ...
     loadCarrerasDropdown();
 
-    // 2. Añadir el listener para el click en toda la página, gestionando ambos dropdowns
+    // 1. AÑADIR LISTENER PARA EL BOTÓN DE HAMBURGUESA (Móvil)
+    const menuToggleButton = document.querySelector('.menu-toggle');
+
+    if (menuToggleButton) {
+        menuToggleButton.addEventListener('click', toggleMobileMenu);
+    }
+
+    // 2. Añadir el listener para el click en toda la página, gestionando dropdowns
     document.addEventListener('click', (event) => {
-        // Lógica de Carreras
         toggleCarrerasDropdown(event);
-        
-        // Lógica de Contacto (NUEVO)
         toggleContactoDropdown(event);
+
+        // Si se hace clic fuera de la navegación principal, también cerramos el menú móvil
+        const nav = document.querySelector('.nav');
+        if (nav && nav.classList.contains('open') && 
+            !nav.contains(event.target) && !menuToggleButton.contains(event.target)) {
+            // Cierra el menú móvil solo si el click fue fuera del menú y fuera del botón de toggle
+            nav.classList.remove('open');
+        }
     });
 });
