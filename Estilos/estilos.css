@@ -58,8 +58,18 @@ body {
     border-radius: 5px; 
 }
 
+.menu-toggle {
+    display: none; 
+}
+
+/* 2. Navegación Principal (ahora .nav) */
+.nav {
+    display: flex; /* Asegura que la lista <ul> se distribuya en PC */
+    align-items: center;
+}
+
 /* Navegación Derecha */
-.header-right ul {
+.nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -68,7 +78,7 @@ body {
 }
 
 /* Links de Navegación */
-.header-right a {
+.nav ul a {
     text-decoration: none;
     color: #fff;
     font-weight: 500;
@@ -92,7 +102,7 @@ body {
 }
 
 /* Estilo hover general */
-.header-right a:hover {
+.nav ul a:hover {
     background-color: #3b506b;
 }
 
@@ -1483,45 +1493,58 @@ body {
     
     /* Esta regla es CRUCIAL para evitar que el contenido horizontal desborde y el chatbot se oculte */
     body {
-        overflow-x: hidden; 
+        overflow-x: hidden;
+        width: 100%;
         min-width: 320px; /* Asegurar un ancho mínimo para celulares muy pequeños */
     }
     
-    /* Ajuste del Contenido Principal */
+    /* Asegurar que los contenedores principales ocupen el ancho completo */
     .main-content {
-        /* Reducir el padding horizontal de 20px a 10px para maximizar el espacio útil */
-        padding: 10px; 
+        max-width: 100%; 
+        margin: 0; 
+        padding: 10px 15px;
     }
 
     /* 2. SOLUCIÓN PARA EL ENCABEZADO Y MENÚ CORTADOS */
     
-    /* Ajuste del Encabezado */
     .header {
         /* Reducción del padding horizontal (ej. de 50px a 15px) */
         padding: 15px 15px; 
+        width: 100%; /* Ocupa el ancho completo */
     }
     
     /* Ocultar el Menú Horizontal y Preparar el Desplegable */
     .nav {
-        display: none; /* Ocultar el menú horizontal por defecto */
+        display: none; 
         position: absolute; 
-        top: 50px; /* Colocarlo justo debajo del header */
+        top: 50px; 
         left: 0;
         width: 100%;
-        flex-direction: column; /* Apilar los enlaces verticalmente */
-        background-color: #27374d; /* Fondo del header para el menú desplegado */
+        flex-direction: column; 
+        background-color: #27374d; 
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         z-index: 10;
     }
+
+    .nav ul {
+        flex-direction: column; /* Apilar los ítems */
+        width: 100%;
+    }
     
-    /* Estilo de los Enlaces en el Menú Desplegable */
-    .nav a {
+    /* Estilo de los Enlaces en el Menú Desplegable (unificado) */
+    .nav ul a {
         padding: 10px 20px;
         text-align: left;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: block; /* Ocupar todo el ancho del ítem */
     }
     
-    /* Mostrar el Ícono del Menú (Asumiendo que tiene la clase .menu-toggle en el HTML) */
+    .nav ul li {
+        width: 100%;
+        text-align: left;
+    }
+    
+    /* Mostrar el Ícono del Menú */
     .menu-toggle {
         display: block; 
     }
@@ -1530,43 +1553,79 @@ body {
     .nav.open {
         display: flex; 
     }
-    
+
     /* 3. SOLUCIÓN PARA EL PIE DE PÁGINA DESORGANIZADO */
     
     .footer {
-        flex-direction: column; /* Forzar que los elementos se apilen verticalmente */
+        width: 100%; /* Asegura el ancho completo */
+        flex-direction: column; 
         text-align: center;
-        padding: 20px 10px; /* Ajustar padding lateral */
+        padding: 20px 10px; 
     }
 
-    /* Si el footer usa un contenedor interno (como .footer-content) */
+    /* Si usa un contenedor interno para el footer */
     .footer-content {
+        width: 100%;
         flex-direction: column;
         align-items: center;
-        width: 100%;
     }
     
-    /* Asegurar que las secciones internas tengan espacio vertical */
     .footer-section {
         margin-bottom: 20px; 
         width: 100%;
     }
 
-    /* 4. SOLUCIÓN PARA EL BOTÓN FLOTANTE DEL CHATBOT */
-    /* Reafirmar la posición fija para asegurar que se mantenga en el viewport */
-    .chatbot-toggle {
-        position: fixed; 
+    /* ========================================================== */
+    /* 4. SOLUCIÓN PARA EL BOTÓN Y VENTANA FLOTANTE DEL CHATBOT */
+    /* ========================================================== */
+    
+    /* Contenedor Flotante (Asegura que el anclaje fixed funcione) */
+    /* Usamos .floating-chatbot-container que es el que tiene position: fixed en el CSS base */
+    .floating-chatbot-container {
         bottom: 15px; 
         right: 15px; 
-        z-index: 1000;
+        z-index: 10000;
+    }
+    
+    /* Botón de Toggle: Reducir el tamaño de 90px a algo que quepa */
+    .chatbot-toggle-button {
+        width: 65px;
+        height: 65px;
+        font-size: 2rem; 
+        box-shadow: 0 3px 10px rgba(0, 123, 255, 0.6); 
     }
 
+    /* Ventana del Chatbot: Reducir el tamaño de 580px a un ancho que quepa en la pantalla */
+    .chatbot-window {
+        /* Ocupa casi todo el ancho de la pantalla (100% del viewport - 30px de margen) */
+        width: calc(100vw - 30px); 
+        height: 70vh; /* Ocupa un porcentaje de la altura del viewport */
+        bottom: 80px; /* Ajuste basado en el nuevo tamaño del botón (65px) */
+        right: 0; /* Asegura que se alinee con el borde derecho del contenedor flotante */
+    }
+    
     /* 5. Adaptación Adicional para las Tarjetas/Grillas */
-    /* Si usa una grilla para mostrar carreras o materias, fuerce a una columna */
-    .card-grid, .carreras-list {
-        /* Ejemplo si usa CSS Grid: */
-        display: grid;
+    
+    /* Aseguramos que la grilla de materias destacadas se vea en una columna */
+    .featured-grid {
         grid-template-columns: 1fr; /* Una sola columna */
         gap: 15px;
+        padding: 10px 0;
+    }
+    
+    /* Si usa una grilla o lista de carreras, fuerce una columna */
+    .card-grid, .carreras-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Las dos columnas laterales deben apilarse en móvil */
+    .two-column-container-bottom {
+        flex-direction: column;
+    }
+    
+    .column-left-carreras, .column-right-horarios {
+        width: 100%;
+        margin-bottom: 20px;
     }
 }
