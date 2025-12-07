@@ -189,4 +189,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeEntity) {
         updateSidebarActiveState(activeEntity);
     } 
+
+    // ----------------------------------------------------------------
+    // 🟢 LÓGICA DE RESPONSIVIDAD MÓVIL (SIDEBAR TOGGLE)
+    // ----------------------------------------------------------------
+    const menuToggleBtn = document.getElementById('menu-toggle-btn');
+    const layout = document.querySelector('.layout');
+
+    if (menuToggleBtn && layout) {
+        // 1. Toggle (abrir/cerrar) la barra lateral
+        menuToggleBtn.addEventListener('click', () => {
+            layout.classList.toggle('sidebar-open');
+
+            // Cambiar el icono del botón (hamburguesa <-> X)
+            const icon = menuToggleBtn.querySelector('i');
+            if (layout.classList.contains('sidebar-open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times'); // Icono 'X' 
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars'); // Icono Hamburguesa
+            }
+        });
+        
+        // 2. Cerrar el menú al hacer clic en un enlace de navegación (para mejorar la usabilidad móvil)
+        document.querySelectorAll('.sidebar-nav a').forEach(navLink => {
+            navLink.addEventListener('click', () => {
+                // Solo si el sidebar está abierto (y estamos probablemente en móvil)
+                if (layout.classList.contains('sidebar-open')) {
+                    layout.classList.remove('sidebar-open');
+                    
+                    // Restaurar el icono a 'bars'
+                    const icon = menuToggleBtn.querySelector('i');
+                    if(icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars'); 
+                    }
+                }
+            });
+        });
+    }
 });

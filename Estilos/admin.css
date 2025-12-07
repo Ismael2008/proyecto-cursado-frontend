@@ -53,6 +53,9 @@ body {
     position: fixed; 
     top: 0;
     left: 0; 
+    /* 🟢 CORRECCIÓN RESPONSIVIDAD MÓVIL: Añadir transiciones para efecto suave */
+    transition: transform 0.3s ease, width 0.3s ease; 
+    z-index: 999;
 
 }
 
@@ -129,6 +132,8 @@ body {
     overflow-y: auto;
     margin-left: 250px;
     min-width: 0;
+    /* 🟢 CORRECCIÓN RESPONSIVIDAD MÓVIL: Añadir transición */
+    transition: margin-left 0.3s ease;
 
 }
 
@@ -139,6 +144,28 @@ body {
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 1px solid #e9ecef;
+}
+
+/* 🟢 NUEVO: Botón de menú/hamburguesa para móviles */
+.menu-toggle-btn {
+    display: none; /* Oculto por defecto en desktop */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1010; 
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /* Solo se usará en media querys de móvil */
+}
+
+.menu-toggle-btn:hover {
+    background: #0056b3; /* Un azul más oscuro */
 }
 
 .main-header h1 {
@@ -630,59 +657,123 @@ body {
 /* ------------------------------------------- */
 /* RESPONSIVIDAD */
 /* ------------------------------------------- */
+
+/* 🟢 MEDIA QUERY PARA TABLETAS (<= 992px) */
 @media (max-width: 992px) {
-.sidebar {
-    width: 80px;
-}
-.sidebar-header h2 {
-    font-size: 0;
-}
-.nav-item span {
-    display: none;
-}
-.nav-item {
-    justify-content: center;
-    padding: 15px 0;
-}
-.nav-item i {
-    margin-right: 0;
-}
-.nav-item:hover, .nav-item.active {
-    padding-left: 0;
-}
-.main-content {
-    padding: 15px;
-}
-/* Asegurar que la barra de acciones se vea bien en tabletas */
-.actions-bar {
-    flex-direction: column;
-    align-items: flex-start;
-}
-.filter-group {
-    margin-bottom: 15px;
-}
-#carrera-select {
-    min-width: 150px;
-}
-    
-/* 🟢 RESPONSIVIDAD MODAL: Vuelve a 1 columna en pantallas pequeñas */
-#materia-form .form-grid {
-    flex-direction: column; 
-    gap: 0; 
-}
+    /* 1. Muestra el botón de menú para abrir el sidebar */
+    .menu-toggle-btn {
+        display: block; 
+    }
+    
+    /* 2. Sidebar oculta por defecto y sobrepuesta al contenido */
+    .sidebar {
+        width: 250px;
+        transform: translateX(-250px); /* Totalmente fuera de la vista */
+    }
+    
+    /* 3. Contenido principal ocupa el 100% y tiene espacio para el botón de menú */
+    .main-content {
+        margin-left: 0; 
+        width: 100%;
+        padding: 15px;
+        padding-top: 60px; /* Evita que el contenido sea tapado por el botón de menú */
+    }
+
+    /* 4. Estado "abierto": la clase 'sidebar-open' se añade al .layout con JS */
+    .layout.sidebar-open .sidebar {
+        transform: translateX(0); /* Vuelve a la vista */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* 5. Oscurece el fondo cuando el menú está abierto */
+    .layout.sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998; 
+    }
+    
+    /* 6. Barra de Acciones y Filtros Apilada */
+    .actions-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px; /* Separación entre el botón "Crear" y los filtros */
+    }
+    
+    .filter-item {
+        /* Aseguramos que el label y el select estén apilados en móvil */
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 5px;
+        width: 100%;
+    }
+    
+    /* Los selectores de filtro ocupan todo el ancho */
+    #carrera-select, #materia-select, #materia-principal-select {
+        min-width: 100%;
+    }
+    
+    /* 7. Vuelve a 1 columna el formulario de Materias/Admin */
+    #materia-form .form-grid, #administrador-form .form-grid {
+        flex-direction: column; 
+        gap: 0; 
+    }
 }
 
+/* 🟢 MEDIA QUERY PARA MÓVILES PEQUEÑOS (<= 576px) */
 @media (max-width: 576px) {
-.main-header {
-    flex-direction: column;
-    align-items: flex-start;
-}
-.user-info {
-    margin-top: 10px;
-}
-/* Ajuste para que los botones de guardar ocupen todo el ancho en móviles */
-#btn-save-carrera, #btn-save-materia {
-    width: 100%;
-    max-width: none;
-}
+    /* 1. Encabezado apilado */
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .user-info {
+        margin-top: 10px;
+    }
+    
+    /* 2. Modales en móvil */
+    .modal-content {
+        padding: 15px; /* Reducimos el padding interior */
+    }
+    #materia-modal .modal-content, #administrador-modal .modal-content {
+        max-width: 95%; /* Usar casi todo el ancho de la pantalla */
+    }
+    
+    /* 3. Botones de acción en tablas (la corrección más importante) */
+    .btn {
+        padding: 8px 10px; /* Reducir el tamaño de los botones */
+        font-size: 0.9rem; 
+        gap: 5px; 
+    }
+
+    #carreras-table td:last-child, 
+    #materias-table td:last-child, 
+    #horario-table td:last-child, 
+    #correlatividad-table td:last-child, 
+    #administrador-table td:last-child {
+        /* 🔴 OBLIGA A LOS BOTONES A APILARSE VERTICALMENTE */
+        white-space: normal; /* Permite saltos de línea */
+        display: flex; 
+        flex-direction: column; /* Apila los botones */
+        gap: 5px; /* Espacio entre los botones apilados */
+        align-items: flex-start; 
+    }
+    
+    /* Eliminar el margen horizontal que separaba los botones */
+    #carreras-table td:last-child .btn:not(:last-child),
+    #materias-table td:last-child .btn:not(:last-child),
+    #horario-table td:last-child .btn:not(:last-child),
+    #administrador-table td:last-child .btn:not(:last-child) {
+        margin-right: 0; 
+    }
+    
+    /* 4. Ajuste para que los botones de guardar ocupen todo el ancho en móviles */
+    #btn-save-carrera, #btn-save-materia, #btn-save-admin {
+        width: 100%;
+        max-width: none;
+    }
 }
