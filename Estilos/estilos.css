@@ -858,6 +858,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     margin-top: 0;
+    min-width: 0;
 }
 
 /* Estilos de los elementos de control */
@@ -952,7 +953,8 @@ body {
     gap: 1rem;
     padding-top: 1rem; 
     border-top: 1px solid #ccc;
-    margin-top: auto; 
+    margin-top: auto;
+    min-width: 0; 
 }
 
 .action-btn {
@@ -968,6 +970,9 @@ body {
     justify-content: center;
     gap: 0.75rem;
     transition: background-color 0.3s ease;
+    white-space: normal; /* Permite que el texto del botón se rompa en varias líneas si es muy largo */
+    word-break: break-word; /* Asegura que palabras muy largas se rompan */
+    min-width: 0;
 }
 
 .action-btn:hover {
@@ -1548,11 +1553,11 @@ body {
     /* Reglas del menú desplegable */
     .menu-toggle { display: block; }
     .nav {
-        display: none; position: absolute; top: 50px; left: auto; transform: none; right: 5%;
-        width: 30%; flex-direction: column; background-color: #27374d;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 10;
+        display: none; position: absolute; top: 50px; left: auto; transform: none; right: 5%; max-width: 400px;
+        width: 40%; flex-direction: column; background-color: white; border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); z-index: 10;
     }
-    .nav ul { flex-direction: column; width: 100%; }
+    .nav ul { flex-direction: column; width: 100%; padding: 0; margin: 0; }
     .nav.open { display: flex; }
     .nav ul a {
         padding: 10px 20px; text-align: left;
