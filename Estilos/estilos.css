@@ -1495,178 +1495,127 @@ body {
     body {
         overflow-x: hidden;
         width: 100%;
-        min-width: 320px; /* Asegurar un ancho mínimo para celulares muy pequeños */
+        min-width: 320px;
     }
     
-    /* Asegurar que los contenedores principales ocupen el ancho completo */
+    /* 🟢 CORRECCIÓN CRÍTICA: Anula el max-width de escritorio y elimina márgenes */
     .main-content {
         max-width: 100%; 
         margin: 0; 
         padding: 10px 15px;
     }
 
+    /* 🟢 CORRECCIÓN CRÍTICA: Anula el width: 1080px del main-box y lo obliga a 100% */
+    .main-box {
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* ------------------------------------------------------------- */
     /* 2. SOLUCIÓN PARA EL ENCABEZADO Y MENÚ CORTADOS */
     
     .header {
-        /* Reducción del padding horizontal (ej. de 50px a 15px) */
         padding: 15px 15px; 
-        width: 100%; /* Ocupa el ancho completo */
+        width: 100%;
     }
     
-    /* Ocultar el Menú Horizontal y Preparar el Desplegable */
+    /* Reglas del menú desplegable */
+    .menu-toggle { display: block; }
     .nav {
-        display: none; 
-        position: absolute; 
-        top: 50px; 
-        left: 0;
-        width: 100%;
-        flex-direction: column; 
-        background-color: #27374d; 
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 10;
+        display: none; position: absolute; top: 50px; left: 0;
+        width: 100%; flex-direction: column; background-color: #27374d;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 10;
     }
-
-    .nav ul {
-        flex-direction: column; /* Apilar los ítems */
-        width: 100%;
-    }
-    
-    /* Estilo de los Enlaces en el Menú Desplegable (unificado) */
+    .nav ul { flex-direction: column; width: 100%; }
+    .nav.open { display: flex; }
     .nav ul a {
-        padding: 10px 20px;
-        text-align: left;
+        padding: 10px 20px; text-align: left;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: block; /* Ocupar todo el ancho del ítem */
-    }
-    
-    .nav ul li {
-        width: 100%;
-        text-align: left;
-    }
-    
-    /* Mostrar el Ícono del Menú */
-    .menu-toggle {
         display: block; 
     }
+    .nav ul li { width: 100%; text-align: left; }
 
-    /* Clase que JavaScript (menu.js) debe añadir para MOSTRAR el menú */
-    .nav.open {
-        display: flex; 
-    }
 
+    /* ------------------------------------------------------------- */
     /* 3. SOLUCIÓN PARA EL PIE DE PÁGINA DESORGANIZADO */
     
     .footer {
-        width: 100%; /* Asegura el ancho completo */
+        width: 100%; 
         flex-direction: column; 
         text-align: center;
         padding: 20px 10px; 
     }
-
-    /* Si usa un contenedor interno para el footer */
     .footer-content {
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
+        width: 100%; flex-direction: column; align-items: center;
     }
-    
     .footer-section {
-        margin-bottom: 20px; 
-        width: 100%;
+        margin-bottom: 20px; width: 100%;
     }
 
     /* ------------------------------------------------------------- */
-    /* 1. SOLUCIÓN CONTENIDO PRINCIPAL Y CAJAS (Cuerpo de la Página) */
-    /* ------------------------------------------------------------- */
-    
-    /* Ajuste del Contenido Principal */
-    .main-content {
-        max-width: 100%; /* Elimina la limitación de 1100px */
-        margin: 0; /* Elimina los márgenes automáticos laterales */
-        padding: 10px 15px; /* Reduce el padding lateral para aprovechar el espacio */
-    }
-
-    /* ------------------------------------------------------------- */
-    /* 2. ADAPTACIÓN DE LAS CAJAS/GRILLAS (Materias Destacadas) */
+    /* 4. ADAPTACIÓN DE LOS LAYOUTS DE CONTENIDO (Index, Materia, Carrera) */
     /* ------------------------------------------------------------- */
 
-    /* La grilla de materias destacadas o tarjetas debe apilarse */
+    /* Grilla de Materias Destacadas (featured-grid) */
     .featured-grid {
-        /* Asegura que la grilla ocupe todo el ancho disponible */
-        width: 100%; 
-        /* Fija la grilla a una sola columna para que las cajas se apilen */
-        grid-template-columns: 1fr; 
-        gap: 15px; /* Espacio vertical entre las cajas */
+        grid-template-columns: 1fr; /* Apilamiento en una columna */
+        gap: 15px;
         padding: 10px 0;
     }
-
-    /* Si usa una grilla o lista de carreras, fuerce una columna */
-    .card-grid, .carreras-list {
-        grid-template-columns: 1fr;
+    
+    /* Contenedor de dos columnas en el Home (Carreras y Horarios) */
+    .two-column-container-bottom {
+        flex-direction: column; /* Apilar */
+        gap: 20px;
+    }
+    .column-left-carreras, .column-right-horarios {
+        width: 100%; /* Ocupan todo el ancho */
+        min-width: initial;
+    }
+    
+    /* Layuot de Página de Materia (Sidebar y Contenido) */
+    .materia-container {
+        flex-direction: column; /* Apilar la barra lateral y el contenido principal */
+    }
+    .materia-sidebar, .materia-main {
+        width: 100%;
+        flex-shrink: initial;
+    }
+    
+    /* Layout de Página de Carrera (Sidebar y Contenido) */
+    .carrera-container {
+        flex-direction: column; /* Apilar la barra lateral y el contenido principal */
+    }
+    .carrera-main, .carrera-sidebar {
+        flex: initial;
+        width: 100%;
+    }
+    .docentes-carrera {
+        flex-direction: column; /* Apilar la lista de docentes si está en flex */
+        gap: 20px;
+    }
+    
+    /* Tarjetas del Plan de Estudio (Carrera) */
+    .tarjetas {
+        grid-template-columns: 1fr; /* Una sola columna para las materias */
         gap: 15px;
     }
     
-    /* Si su contenido usa un contenedor de dos columnas para texto e imagen (ejemplo: home) */
-    .two-column-layout {
-        flex-direction: column; /* Apilar en lugar de mostrar en fila */
-    }
+    /* ------------------------------------------------------------- */
+    /* 5. SOLUCIÓN PARA EL CHATBOT (Asegurar flotabilidad) */
+    /* ------------------------------------------------------------- */
     
-    .column {
-        width: 100%; /* Asegura que cada columna ocupe el ancho completo */
-        margin-bottom: 20px;
-    }
-
-    /* ========================================================== */
-    /* 4. SOLUCIÓN PARA EL BOTÓN Y VENTANA FLOTANTE DEL CHATBOT */
-    /* ========================================================== */
-    
-    /* Contenedor Flotante (Asegura que el anclaje fixed funcione) */
-    /* Usamos .floating-chatbot-container que es el que tiene position: fixed en el CSS base */
     .floating-chatbot-container {
-        bottom: 15px; 
-        right: 15px; 
-        z-index: 10000;
+        bottom: 15px; right: 15px; z-index: 10000;
     }
-    
-    /* Botón de Toggle: Reducir el tamaño de 90px a algo que quepa */
     .chatbot-toggle-button {
-        width: 65px;
-        height: 65px;
-        font-size: 2rem; 
+        width: 65px; height: 65px; font-size: 2rem; 
         box-shadow: 0 3px 10px rgba(0, 123, 255, 0.6); 
     }
-
-    /* Ventana del Chatbot: Reducir el tamaño de 580px a un ancho que quepa en la pantalla */
     .chatbot-window {
-        /* Ocupa casi todo el ancho de la pantalla (100% del viewport - 30px de margen) */
         width: calc(100vw - 30px); 
-        height: 70vh; /* Ocupa un porcentaje de la altura del viewport */
-        bottom: 80px; /* Ajuste basado en el nuevo tamaño del botón (65px) */
-        right: 0; /* Asegura que se alinee con el borde derecho del contenedor flotante */
-    }
-    
-    /* 5. Adaptación Adicional para las Tarjetas/Grillas */
-    
-    /* Aseguramos que la grilla de materias destacadas se vea en una columna */
-    .featured-grid {
-        grid-template-columns: 1fr; /* Una sola columna */
-        gap: 15px;
-        padding: 10px 0;
-    }
-    
-    /* Si usa una grilla o lista de carreras, fuerce una columna */
-    .card-grid, .carreras-list {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    /* Las dos columnas laterales deben apilarse en móvil */
-    .two-column-container-bottom {
-        flex-direction: column;
-    }
-    
-    .column-left-carreras, .column-right-horarios {
-        width: 100%;
-        margin-bottom: 20px;
+        height: 70vh; 
+        bottom: 80px; 
+        right: 0;
     }
 }
