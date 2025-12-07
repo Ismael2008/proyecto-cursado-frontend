@@ -1575,6 +1575,47 @@ body {
         width: 100%;
     }
 
+    /* ------------------------------------------------------------- */
+    /* 1. SOLUCIÓN CONTENIDO PRINCIPAL Y CAJAS (Cuerpo de la Página) */
+    /* ------------------------------------------------------------- */
+    
+    /* Ajuste del Contenido Principal */
+    .main-content {
+        max-width: 100%; /* Elimina la limitación de 1100px */
+        margin: 0; /* Elimina los márgenes automáticos laterales */
+        padding: 10px 15px; /* Reduce el padding lateral para aprovechar el espacio */
+    }
+
+    /* ------------------------------------------------------------- */
+    /* 2. ADAPTACIÓN DE LAS CAJAS/GRILLAS (Materias Destacadas) */
+    /* ------------------------------------------------------------- */
+
+    /* La grilla de materias destacadas o tarjetas debe apilarse */
+    .featured-grid {
+        /* Asegura que la grilla ocupe todo el ancho disponible */
+        width: 100%; 
+        /* Fija la grilla a una sola columna para que las cajas se apilen */
+        grid-template-columns: 1fr; 
+        gap: 15px; /* Espacio vertical entre las cajas */
+        padding: 10px 0;
+    }
+
+    /* Si usa una grilla o lista de carreras, fuerce una columna */
+    .card-grid, .carreras-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    /* Si su contenido usa un contenedor de dos columnas para texto e imagen (ejemplo: home) */
+    .two-column-layout {
+        flex-direction: column; /* Apilar en lugar de mostrar en fila */
+    }
+    
+    .column {
+        width: 100%; /* Asegura que cada columna ocupe el ancho completo */
+        margin-bottom: 20px;
+    }
+
     /* ========================================================== */
     /* 4. SOLUCIÓN PARA EL BOTÓN Y VENTANA FLOTANTE DEL CHATBOT */
     /* ========================================================== */
