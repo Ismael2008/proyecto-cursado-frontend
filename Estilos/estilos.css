@@ -1511,6 +1511,32 @@ body {
         padding: 10px;
     }
 
+    /* --- Sección de Horarios Recientes (schedule-section) --- */
+
+/* 1. Contenedor de la tabla: asegura el desplazamiento horizontal si es necesario */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; /* Mejora el scroll en iOS */
+}
+
+/* 2. Estilo base de la tabla: deshabilita el layout fijo para que las celdas se ajusten */
+.schedule-table {
+    width: 100%;
+    /* ❌ Anula table-layout: fixed; o permite que la tabla se haga más ancha si es necesario */
+    table-layout: auto; 
+    min-width: 500px; /* Le da un ancho mínimo para que las columnas no colapsen */
+}
+
+/* 3. Anula los anchos fijos o porcentuales de las columnas en móvil */
+.schedule-table th:nth-child(1), .schedule-table td:nth-child(1),
+.schedule-table th:nth-child(2), .schedule-table td:nth-child(2),
+.schedule-table th:nth-child(3), .schedule-table td:nth-child(3),
+.schedule-table th:nth-child(4), .schedule-table td:nth-child(4) {
+    width: auto; /* Dejar que el contenido defina el ancho */
+    white-space: nowrap; /* Evita que el texto de las celdas se rompa en varias líneas */
+}
+
     /* ------------------------------------------------------------- */
     /* 2. SOLUCIÓN PARA EL ENCABEZADO Y MENÚ CORTADOS */
     
