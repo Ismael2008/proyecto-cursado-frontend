@@ -709,12 +709,14 @@ body {
         flex-direction: column; 
         align-items: flex-start;
         gap: 5px;
-        width: 100%;
+        width: auto; 
+        max-width: 300px;
     }
     
     /* Los selectores de filtro ocupan todo el ancho */
     #carrera-select, #materia-select, #materia-principal-select {
-        min-width: 100%;
+        width: 100%; 
+        min-width: 250px;
     }
     
     /* 7. Vuelve a 1 columna el formulario de Materias/Admin */
@@ -756,17 +758,18 @@ body {
     #correlatividad-table td:last-child, 
     #administrador-table td:last-child {
         /* 🔴 OBLIGA A LOS BOTONES A APILARSE VERTICALMENTE */
-        white-space: normal; /* Permite saltos de línea */
+        white-space: nowrap; /* Permite saltos de línea */
         display: flex; 
-        flex-direction: column; /* Apila los botones */
+        flex-direction: row; /* Apila los botones */
         gap: 5px; /* Espacio entre los botones apilados */
-        align-items: flex-start; 
+        align-items: center; 
     }
     
     /* Eliminar el margen horizontal que separaba los botones */
     #carreras-table td:last-child .btn:not(:last-child),
     #materias-table td:last-child .btn:not(:last-child),
     #horario-table td:last-child .btn:not(:last-child),
+    #correlatividad-table td:last-child .btn:not(:last-child),
     #administrador-table td:last-child .btn:not(:last-child) {
         margin-right: 0; 
     }
