@@ -1679,6 +1679,7 @@ body {
     flex-direction: column; /* Apila los botones de acción */
     gap: 10px;
     margin-top: 20px;
+    min-width: 0;
 }
 .schedule-actions .action-btn {
     width: 100%; /* Botones de ancho completo */
@@ -1688,6 +1689,27 @@ body {
 /* 5. Asegurar que los contenedores internos de la selección ocupen el ancho */
 .selection-box,
 .selected-materias-sidebar {
-    width: 100%;
+    width: 100% !important; 
+    flex: none !important;
+    /* REGLA CRÍTICA: Permite que el elemento se comprima dentro del layout flexible */
+    min-width: 0 !important;
+}
+/* 3. Estilo de los Botones Individuales */
+.action-btn {
+    width: 100%; 
+    /* Regla clave: Forzar al texto a romperse y envolverse si es muy largo */
+    white-space: normal; 
+    word-break: break-word; /* Útil para palabras sin espacios */
+    min-width: 0;
+}
+
+/* 4. Lista de Materias Seleccionadas */
+#selected-materias-list {
+    min-width: 0; 
+}
+
+/* 5. Ítems de la Lista */
+.selected-materia-item {
+    min-width: 0;
 }
 }
