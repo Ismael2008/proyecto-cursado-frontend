@@ -272,6 +272,14 @@ body {
 
 }
 
+.table-container td:last-child, 
+.table-container th:last-child {
+    /* 🟢 REGLA GENERAL: Centra el texto (botones) horizontalmente */
+    text-align: center;
+    /* Centra el contenido verticalmente si la fila es alta */
+    vertical-align: middle; 
+}
+
 /* Estilos de base aplicados a ambas tablas */
 #carreras-table, #materias-table, #horario-table, #correlatividad-table, #administrador-table { 
     width: 100%;
