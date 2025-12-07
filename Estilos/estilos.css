@@ -1644,4 +1644,45 @@ body {
         bottom: 80px; 
         right: 0;
     }
+
+    /* ------------------------------------------------------------- */
+/* 6. ADAPTACIÓN DE PÁGINA: MI HORARIO (mi-horario.html) */
+/* ------------------------------------------------------------- */
+
+/* 1. Contenedor Principal de las Dos Columnas (Selección y Tabla) */
+.controls-and-schedule {
+    flex-direction: column; /* CRÍTICO: Apila las columnas verticalmente */
+    gap: 20px; /* Separación vertical entre las dos grandes secciones */
+}
+
+/* 2. Asegurar que las columnas ocupen todo el ancho disponible */
+.schedule-controls,
+.schedule-display-area {
+    width: 100%; /* Ocupan todo el ancho de la pantalla */
+    flex: initial; /* Anula cualquier proporción de flex: 1 o flex: 2 */
+}
+
+/* 3. Apilamiento interno de los Controles (Selección y Materias Seleccionadas) */
+.controls-flex-row {
+    flex-direction: column; /* Apila el área de selección y el sidebar de materias */
+    gap: 20px;
+}
+
+/* 4. Asegurar que los botones de acción se apilen (Imprimir, Descargar) */
+.schedule-actions {
+    display: flex; 
+    flex-direction: column; /* Apila los botones de acción */
+    gap: 10px;
+    margin-top: 20px;
+}
+.schedule-actions .action-btn {
+    width: 100%; /* Botones de ancho completo */
+    text-align: center;
+}
+
+/* 5. Asegurar que los contenedores internos de la selección ocupen el ancho */
+.selection-box,
+.selected-materias-sidebar {
+    width: 100%;
+}
 }
