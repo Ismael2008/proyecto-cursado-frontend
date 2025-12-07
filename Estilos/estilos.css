@@ -1693,6 +1693,7 @@ body {
     flex: none !important;
     /* REGLA CRÍTICA: Permite que el elemento se comprima dentro del layout flexible */
     min-width: 0 !important;
+    box-sizing: border-box;
 }
 /* 3. Estilo de los Botones Individuales */
 .action-btn {
