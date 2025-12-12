@@ -149,7 +149,7 @@ body {
 /* 🟢 NUEVO: Botón de menú/hamburguesa para móviles */
 .menu-toggle-btn {
     display: none; /* Oculto por defecto en desktop */
-    position: fixed;
+    position: absolute;
     top: 15px;
     left: 15px;
     z-index: 1010; 
