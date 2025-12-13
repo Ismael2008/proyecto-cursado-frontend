@@ -149,10 +149,9 @@ body {
 /* 🟢 NUEVO: Botón de menú/hamburguesa para móviles */
 .menu-toggle-btn {
     display: none; /* Oculto por defecto en desktop */
-    position: fixed;
+    position: absolute;
     top: 15px;
-    right: 15px;
-
+    left: 15px;
     z-index: 1010; 
     padding: 10px;
     background-color: var(--primary-color);
@@ -674,8 +673,15 @@ body {
         display: block;
         position: fixed;
         top: 15px; /* Aseguramos que use esta posición en móvil */
-        right: 15px;     /* Distancia desde la derecha */
-        z-index: 1001;
+        left: 15px;
+
+        z-index: 10002;
+        background-color: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
     }
     
     /* 2. Sidebar oculta por defecto y sobrepuesta al contenido */
